@@ -1,5 +1,5 @@
-import BotaoVoltar from "../../components/Botao-Voltar"
-import Header from "../../components/Header"
+import BotaoVoltar from "../Botao-Voltar"
+import Header from "../Header"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
