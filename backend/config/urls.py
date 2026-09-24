@@ -3,10 +3,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-import api.urls
+import backend.api.urls
 
 urlpatterns = [
-    path('', include(api.urls)),
+    path('', include(backend.api.urls)),
     path('admin/', admin.site.urls),
 ]
 
