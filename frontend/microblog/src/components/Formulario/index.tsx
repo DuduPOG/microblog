@@ -3,25 +3,20 @@ import Header from "../Header"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import loginService from "../../services/loginService";
+import { data } from "react-router-dom";
 
 const schema = yup.object().shape({
         username: yup.string()
-                .required("Você precisa colocar um username ou email válido para entrar no sistema!")
-                .test('is-email-or-username', 'Digite um email ou username válido',  (value) => {
-                    if (!value) return false;
-                    
-                    const isEmail = emailRegex.test(value);
-                    
-                    const isUsername = value.length >= 3;
-
-                    return isEmail || isUsername;
-                    }).required(),
+                .required("Você precisa colocar um username válido para entrar no sistema!"),
                 senha: yup.string().required("Você precisa da senha para entrar no sistema!"),
 });
 
 export default function Formulario() : any {
+
+    function Login(data: any) {
+        loginService.logar(data);
+    }
 
     const {
         handleSubmit,
@@ -49,7 +44,7 @@ export default function Formulario() : any {
                             <input 
                                 id="username"
                                 type="text"
-                                placeholder="Username/Email"
+                                placeholder="Username"
                                 {...register("username")}
                                 />
                                 {
@@ -76,7 +71,7 @@ export default function Formulario() : any {
                                 </span>
                                 )}
                         </div>
-                        <input type="submit" value="Entrar" className="br-button primary block warning"/>
+                        <input type="submit" value="Entrar" onClick={Login(data)} className="br-button primary block warning"/>
                     </form>
                 </div>
             </div>
