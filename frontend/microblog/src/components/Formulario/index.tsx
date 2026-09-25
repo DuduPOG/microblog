@@ -4,11 +4,21 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const schema = yup.object().shape({
-        nome: yup.string().min(3, "O nome deve conter pelo menos 3 caracteres").required("Nome é um campo obrigatório"),
-        email: yup.string().max(30, "O email deve conter no máximo 30 caracteres").email().required("Email é um campo obrigatório"),
-        telefone: yup.string().max(11, "O telefone deve conter no máximo 11 caracteres"),
-        idade: yup.number().positive("A idade precisa ser um número positivo").required("Idade é um campo obrigatório")
+        username: yup.string()
+                .required("Você precisa colocar um username ou email válido para entrar no sistema!")
+                .test('is-email-or-username', 'Digite um email ou username válido',  (value) => {
+                    if (!value) return false;
+                    
+                    const isEmail = emailRegex.test(value);
+                    
+                    const isUsername = value.length >= 3;
+
+                    return isEmail || isUsername;
+                    }).required(),
+                senha: yup.string().required("Você precisa da senha para entrar no sistema!"),
 });
 
 export default function Formulario() : any {
@@ -16,7 +26,6 @@ export default function Formulario() : any {
     const {
         handleSubmit,
         register,
-        reset,
         formState: {errors}
     } = useForm({
         resolver: yupResolver(schema)
@@ -31,78 +40,43 @@ export default function Formulario() : any {
     return (
         <>
         <Header/>
-        <h1>Formulário works!</h1>
         <div className="container">
             <div className="row d-flex justify-content-center">
-                <div className="col-6">
+                <div className="grid col-10">
+                    <h1>Login</h1>
                     <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
-                        <div className={`br-input ${errors.nome !== undefined ? "danger" : ""}`}>
-                            <label htmlFor="input-default">Nome</label>
+                        <div className={`br-input mb-3 ${errors.username !== undefined ? "danger" : ""}`}>
                             <input 
-                                id="nome"
+                                id="username"
                                 type="text"
-                                placeholder="Insira seu nome"
-                                {...register("nome")}
+                                placeholder="Username/Email"
+                                {...register("username")}
                                 />
                                 {
-                                errors.nome !== undefined && 
+                                errors.username !== undefined && 
                                 (<span className="feedback danger" role="alert" id="danger">
                                     <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.nome?.message}
+                                    {errors.username?.message}
                                 </span>
                                 )}
                                 
                         </div>
-                        <div className={`br-input ${errors.email !== undefined ? "danger" : ""}`}>
-                            <label htmlFor="input-default">Email</label>
+                        <div className={`br-input mb-3 ${errors.senha !== undefined ? "danger" : ""}`}>
                             <input
-                                id="email"
-                                type="email"
-                                placeholder="Insira seu email"
-                                {...register("email")}
+                                id="senha"
+                                type="senha"
+                                placeholder="Senha"
+                                {...register("senha")}
                                 />
                                 {
-                                errors.email !== undefined && 
+                                errors.senha !== undefined && 
                                 (<span className="feedback danger" role="alert" id="danger">
                                     <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.email?.message}
+                                    {errors.senha?.message}
                                 </span>
                                 )}
                         </div>
-                        <div className={`br-input ${errors.telefone !== undefined ? "danger" : ""}`}>
-                            <label htmlFor="input-default">Telefone</label>
-                            <input
-                                id="telefone"
-                                type="tel"
-                                placeholder="(XX) XXXXX-XXXX"
-                                {...register("telefone")}
-                                />
-                                {
-                                errors.telefone !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.telefone?.message}
-                                </span>
-                                )}
-                        </div>
-                        <div className={`br-input ${errors.idade !== undefined ? "danger" : ""}`}>
-                            <label htmlFor="input-default">Idade</label>
-                            <input
-                                id="idade"
-                                type="number"
-                                placeholder="Insira sua idade"
-                                {...register("idade")}
-                                />
-                                {
-                                errors.idade !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.idade?.message}
-                                </span>
-                                )}
-                        </div>
-                        <input type="submit" value="Enviar" className="br-button primary"/>
-                        <input type="button" value="Limpar" className="br-button secundary" onClick={() => {reset()}}/>
+                        <input type="submit" value="Entrar" className="br-button primary block warning"/>
                     </form>
                 </div>
             </div>
