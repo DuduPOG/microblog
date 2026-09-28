@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cadastroService from "../../services/cadastroService";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
         username: yup.string()
@@ -15,8 +16,11 @@ const schema = yup.object().shape({
 
 export default function FormCadastro() : any {
 
+    const navigate = useNavigate();
+
     function cadastrar(data: any) {
         cadastroService.cadastrar(data);
+        navigate('/login');
     }
 
     const {

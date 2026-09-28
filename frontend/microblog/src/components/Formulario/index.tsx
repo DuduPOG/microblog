@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginService from "../../services/loginService";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
         username: yup.string()
@@ -13,8 +14,11 @@ const schema = yup.object().shape({
 
 export default function Formulario() : any {
 
+    const navigate = useNavigate();
+
     function Login(data: any) {
         loginService.logar(data);
+        navigate('/home');
     }
 
     const {
