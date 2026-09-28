@@ -3,18 +3,20 @@ import Header from "../Header"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import loginService from "../../services/loginService";
+import cadastroService from "../../services/cadastroService";
 
 const schema = yup.object().shape({
         username: yup.string()
                 .required("Você precisa colocar um username válido para entrar no sistema!"),
+        nome: yup.string()
+                .required("Você precisa colocar um username válido para entrar no sistema!"),
         password: yup.string().required("Você precisa da senha para entrar no sistema!"),
 });
 
-export default function Formulario() : any {
+export default function FormCadastro() : any {
 
-    function Login(data: any) {
-        loginService.logar(data);
+    function cadastrar(data: any) {
+        cadastroService.cadastrar(data);
     }
 
     const {
@@ -27,7 +29,7 @@ export default function Formulario() : any {
 
     const dataHandler = (data: any) => {
         console.log(data);
-        Login(data);
+        cadastrar(data);
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
@@ -40,7 +42,7 @@ export default function Formulario() : any {
         <div className="container">
             <div className="row d-flex justify-content-center">
                 <div className="grid col-10">
-                    <h1>Login</h1>
+                    <h1>Cadastro</h1>
                     <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
                         <div className={`br-input mb-3 ${errors.username !== undefined ? "danger" : ""}`}>
                             <input 
@@ -54,6 +56,22 @@ export default function Formulario() : any {
                                 (<span className="feedback danger" role="alert" id="danger">
                                     <i className="fas fa-times-circle" aria-hidden="true"></i>
                                     {errors.username?.message}
+                                </span>
+                                )}
+                                
+                        </div>
+                        <div className={`br-input mb-3 ${errors.nome !== undefined ? "danger" : ""}`}>
+                            <input 
+                                id="nome"
+                                type="text"
+                                placeholder="Nome"
+                                {...register("nome")}
+                                />
+                                {
+                                errors.nome !== undefined && 
+                                (<span className="feedback danger" role="alert" id="danger">
+                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                                    {errors.nome?.message}
                                 </span>
                                 )}
                                 
@@ -73,7 +91,7 @@ export default function Formulario() : any {
                                 </span>
                                 )}
                         </div>
-                        <input type="submit" value="Entrar" className="br-button primary block warning"/>
+                        <input type="submit" value="Cadastrar" className="br-button primary block warning"/>
                     </form>
                 </div>
             </div>
