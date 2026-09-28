@@ -3,11 +3,12 @@ from rest_framework import routers
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import PublicacaoViewSet, ComentarioViewSet, SignupView, LoginView
+from .views import PublicacaoViewSet, ComentarioViewSet, UsuarioViewSet, SignupView, LoginView
 
 router = routers.DefaultRouter()
 router.register(r'publicacao', PublicacaoViewSet)
 router.register(r'comentario', ComentarioViewSet)
+router.register(r'usuario', UsuarioViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -8,7 +8,7 @@ function Header() {
           <div>
             <div className="br-list">
               <div className="header cols-2">
-                <Link to="/home" className="br-item" >Home</Link>
+                <Link to="/publicacoes" className="br-item" >Publicações</Link>
                 <Link to="/sobre" className="br-item">Sobre</Link>
                 <Link to="/login" className="br-item" >Login</Link> 
                 <Link to="/cadastro" className="br-item" >Cadastro</Link> 

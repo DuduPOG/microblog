@@ -18,7 +18,7 @@ export default function Formulario() : any {
 
     function Login(data: any) {
         loginService.logar(data);
-        navigate('/home');
+        navigate('/publicacoes');
     }
 
     const {
