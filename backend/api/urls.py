@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import PublicacaoViewSet, ComentarioViewSet, SignupView, LoginView
 
@@ -15,6 +16,12 @@ urlpatterns = [
     path('api/doc/', SpectacularSwaggerView.as_view(url_name='schema'),
          name='swagger-ui'),
 
+    path('cadastrar', SignupView.as_view(), name='sign-up-no-slash'),
     path('cadastrar/', SignupView.as_view(), name='sign-up'),
+    path('login', LoginView.as_view(), name='token_obtain_pair_no_slash'),
     path('login/', LoginView.as_view(), name='token_obtain_pair'),
+    path('token', LoginView.as_view(), name='token_obtain_pair_short'),
+    path('token/', LoginView.as_view(), name='token_obtain_pair_explicit'),
+    path('token/refresh', TokenRefreshView.as_view(), name='token_refresh_no_slash'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
