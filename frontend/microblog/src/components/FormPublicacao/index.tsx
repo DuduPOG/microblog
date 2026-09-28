@@ -139,6 +139,17 @@ export default function FormPublicacao() {
                                     {errors.autor?.message}
                                 </span>
                                 )}
+                                
+                                //exe,plo da IA como referência
+                                <label htmlFor="author">Selecionar Autor:</label>
+                                <select id="author" {...register('authorId')} style={{ width: '100%', padding: '5px' }}>
+                                <option value="">-- Escolha um usuário --</option>
+                                {mockUsers.map((user) => (
+                                    <option key={user.id} value={user.id}>
+                                    {user.name}
+                                    </option>
+                                ))}
+                                </select>
                              */}
                         </div>
                         <div className={`br-input mb-3`}>
