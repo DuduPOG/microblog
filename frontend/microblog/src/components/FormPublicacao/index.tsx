@@ -27,6 +27,7 @@ const schema = yup.object().shape({
                .required("O autor é necessário"),
         publicado_em: yup
                       .date()
+                      .default(new Date())
 });
 
 
@@ -48,8 +49,8 @@ export default function FormPublicacao() {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = () => {
-        //console.log(data);
+    const dataHandler = (data: any) => {
+        console.log(data);
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
@@ -120,6 +121,7 @@ export default function FormPublicacao() {
                                 {...register('autor')}
                                 aria-placeholder="Autor"
                             >
+                                <option>Dudu</option>
                             </select>
 
                             {/**
@@ -139,7 +141,7 @@ export default function FormPublicacao() {
                                 )}
                              */}
                         </div>
-                        <div className={`br-input mb-3 ${errors.publicado_em !== undefined ? "danger" : ""}`}>
+                        <div className={`br-input mb-3`}>
                             <input
                                 id="publicado_em"
                                 type="date"
