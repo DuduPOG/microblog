@@ -1,6 +1,7 @@
 import BotaoVoltar from "../../components/Botao-Voltar";
 import FormPublicacao from "../../components/FormPublicacao";
 import Header from "../../components/Header";
+import Publicacao from "../../components/Publicacao/detail-publicacoes";
 
 export default function Publicacoes() {
     return (
@@ -8,6 +9,7 @@ export default function Publicacoes() {
         <Header/>
         <h1>Publicações</h1>
         <FormPublicacao/>
+        <Publicacao/>
         <BotaoVoltar/>
         </>
     )

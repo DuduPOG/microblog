@@ -2,7 +2,7 @@ import { axiosInstance } from "./axiosInstance";
 
 class publicacaoService {
     async getId(publicacaoId: any) {
-        const response = await axiosInstance.get(`/publicacao/${publicacaoId}`);
+        const response = await axiosInstance.get(`/publicacao/${publicacaoId}/`);
         return response.data;
     }
 
