@@ -1,11 +1,10 @@
-import BotaoVoltar from "../Botao-Voltar"
-import Header from "../Header"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
+import BotaoCadastro from "../Botao-Cadastro";
 
 const schema = yup.object().shape({
         username: yup.string()
@@ -39,7 +38,6 @@ export default function Formulario() : any {
 
     return (
         <>
-        <Header/>
         <div className="container">
             <div className="row d-flex justify-content-center">
                 <div className="grid col-10">
@@ -82,7 +80,7 @@ export default function Formulario() : any {
                 </div>
             </div>
         </div>
-        <BotaoVoltar/>
+        <BotaoCadastro/>
         </>
     )
 }

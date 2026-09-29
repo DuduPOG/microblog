@@ -1,10 +1,9 @@
-import BotaoVoltar from "../Botao-Voltar"
-import Header from "../Header"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cadastroService from "../../services/cadastroService";
 import { useNavigate } from "react-router-dom";
+import BotaoLogin from "../Botao-Login";
 
 const schema = yup.object().shape({
         username: yup.string()
@@ -42,7 +41,6 @@ export default function FormCadastro() : any {
 
     return (
         <>
-        <Header/>
         <div className="container">
             <div className="row d-flex justify-content-center">
                 <div className="grid col-10">
@@ -100,7 +98,7 @@ export default function FormCadastro() : any {
                 </div>
             </div>
         </div>
-        <BotaoVoltar/>
+        <BotaoLogin/>
         </>
     )
 }
