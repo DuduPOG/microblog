@@ -3,6 +3,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import usuarioService from "../../services/usuarioService";
 import { useEffect } from "react";
+import { useAuth } from "../../auth/AuthProvider";
+import publicacaoService from "../../services/publicacaoService";
 
 const schema = yup.object().shape({
         titulo: yup
@@ -33,13 +35,16 @@ const schema = yup.object().shape({
 
 export default function FormPublicacao() {
 
-    async function getAutores() {
-        const autores = await usuarioService.getAll();
-        console.log(autores);
-        return autores;
-    }
+    const { user } = useAuth();
+    const id = user?.id;
+    
+    useEffect(() => {
+        if (id === undefined) return;
 
-    useEffect(() => {getAutores()}, [])
+        usuarioService.getId(id)
+            .then((usuario) => console.log(usuario))
+            .catch((error) => console.error("Não foi possível buscar o usuário logado.", error));
+    }, [id]);
 
     const {
         handleSubmit,
@@ -49,8 +54,9 @@ export default function FormPublicacao() {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = (data: any) => {
-        console.log(data);
+    const dataHandler = async (data: any) => {
+        const bd = await publicacaoService.create(data);
+        console.log(bd);
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
@@ -121,36 +127,8 @@ export default function FormPublicacao() {
                                 {...register('autor')}
                                 aria-placeholder="Autor"
                             >
-                                <option>Dudu</option>
+                                <option>{user?.username}</option>
                             </select>
-
-                            {/**
-                             * 
-                            <input
-                                id="autor"
-                                type="radio"
-                                placeholder="Autor"
-                                {...register("autor")}
-                                />
-                                {
-                                errors.autor !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.autor?.message}
-                                </span>
-                                )}
-                                
-                                //exe,plo da IA como referência
-                                <label htmlFor="author">Selecionar Autor:</label>
-                                <select id="author" {...register('authorId')} style={{ width: '100%', padding: '5px' }}>
-                                <option value="">-- Escolha um usuário --</option>
-                                {mockUsers.map((user) => (
-                                    <option key={user.id} value={user.id}>
-                                    {user.name}
-                                    </option>
-                                ))}
-                                </select>
-                             */}
                         </div>
                         <div className={`br-input mb-3`}>
                             <input

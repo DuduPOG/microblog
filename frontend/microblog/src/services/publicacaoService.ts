@@ -1,0 +1,45 @@
+import { axiosInstance } from "./axiosInstance";
+
+class publicacaoService {
+    async getId(publicacaoId: any) {
+        const response = await axiosInstance.get(`/publicacao/${publicacaoId}`);
+        return response.data;
+    }
+
+    async getAll() {
+        const response = await axiosInstance.get(`/publicacao/`);
+        return response.data.results;
+    }
+
+    async create(data: any) {
+        const formData = new FormData();
+        formData.append("titulo", data.titulo);
+        formData.append("descricao", data.descricao);
+
+        const imagem = data.imagem instanceof FileList ? data.imagem[0] : data.imagem;
+        if (imagem instanceof File) {
+            formData.append("imagem", imagem);
+        }
+
+        const response = await axiosInstance.post(`publicacao/`, formData);
+        return response.data.results;
+
+    }
+    
+    async update(publicacaoId: any) {
+        const data = this.getId(publicacaoId);
+        if (data === undefined) return;
+        const response = await axiosInstance.put(`/publicacao/`, publicacaoId);
+        return response.data;
+    }
+
+    async destroy(publicacaoId: any) {
+        const data = this.getId(publicacaoId);
+        if (data === undefined) return;
+        const response = await axiosInstance.delete(`/publicacao/`, publicacaoId);
+        return response.data;
+    }
+
+}
+
+export default new publicacaoService();
