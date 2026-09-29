@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import loginService, { type LoginCredentials } from '../services/loginService';
 
 interface AuthUser {
+  id?: number | string;
   user_id?: number | string;
   username?: string;
   nome?: string;
@@ -27,7 +28,8 @@ function decodeAccessToken(access: string): AuthUser {
 
   const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
   const decoded = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '='));
-  return JSON.parse(decoded) as AuthUser;
+  const user = JSON.parse(decoded) as AuthUser;
+  return { ...user, id: user.id ?? user.user_id };
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
