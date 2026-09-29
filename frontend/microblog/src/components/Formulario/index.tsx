@@ -3,8 +3,9 @@ import Header from "../Header"
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import loginService from "../../services/loginService";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAuth } from "../../auth/AuthProvider";
 
 const schema = yup.object().shape({
         username: yup.string()
@@ -15,27 +16,25 @@ const schema = yup.object().shape({
 export default function Formulario() : any {
 
     const navigate = useNavigate();
-
-    function Login(data: any) {
-        loginService.logar(data);
-        navigate('/publicacoes');
-    }
+    const { login } = useAuth();
+    const [loginError, setLoginError] = useState<string | null>(null);
 
     const {
         handleSubmit,
         register,
-        formState: {errors}
+        formState: {errors, isSubmitting}
     } = useForm({
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = (data: any) => {
-        console.log(data);
-        Login(data);
-    }
-    const errorHandler = (errors: any) => {
-        console.log(errors);
-        console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
+    const dataHandler = async (data: { username: string; password: string }) => {
+        setLoginError(null);
+        try {
+            await login(data);
+            navigate('/publicacoes', { replace: true });
+        } catch {
+            setLoginError('Não foi possível entrar. Verifique seu usuário e senha.');
+        }
     };
 
     return (
@@ -45,7 +44,8 @@ export default function Formulario() : any {
             <div className="row d-flex justify-content-center">
                 <div className="grid col-10">
                     <h1>Login</h1>
-                    <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
+                    <form onSubmit={handleSubmit(dataHandler)}>
+                        {loginError && <p className="feedback danger" role="alert">{loginError}</p>}
                         <div className={`br-input mb-3 ${errors.username !== undefined ? "danger" : ""}`}>
                             <input 
                                 id="username"
@@ -77,7 +77,7 @@ export default function Formulario() : any {
                                 </span>
                                 )}
                         </div>
-                        <input type="submit" value="Entrar" className="br-button primary block warning"/>
+                        <input type="submit" value={isSubmitting ? "Entrando..." : "Entrar"} className="br-button primary block warning" disabled={isSubmitting}/>
                     </form>
                 </div>
             </div>
