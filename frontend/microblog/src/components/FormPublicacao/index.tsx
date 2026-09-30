@@ -24,9 +24,6 @@ const schema = yup.object().shape({
                    .string()
                    .required("A descrição é necessária")
                    .max(1200, "A descrição não pode ter mais de 1200 caracteres"),
-        autor: yup
-               .string()
-               .required("O autor é necessário"),
         publicado_em: yup
                       .date()
                       .default(new Date())
@@ -118,17 +115,6 @@ export default function FormPublicacao() {
                                     {errors.descricao?.message}
                                 </span>
                                 )}
-                        </div>
-                        <div className={`br-input mb-3 ${errors.autor !== undefined ? "danger" : ""}`}>
-                            <label htmlFor="autor">Autor</label>
-                            <br></br>
-                            <select
-                                id="autor"
-                                {...register('autor')}
-                                aria-placeholder="Autor"
-                            >
-                                <option>{user?.username}</option>
-                            </select>
                         </div>
                         <div className={`br-input mb-3`}>
                             <input
