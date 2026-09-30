@@ -7,7 +7,7 @@ export default function Publicacoes() {
     return (
         <>
         <Header/>
-        <h1>Publicações</h1>
+        <h1>Adicionar Publicação</h1>
         <FormPublicacao/>
         <Publicacao/>
         <BotaoVoltar/>

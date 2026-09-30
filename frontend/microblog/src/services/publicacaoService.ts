@@ -26,17 +26,13 @@ class publicacaoService {
 
     }
     
-    async update(publicacaoId: any) {
-        const data = this.getId(publicacaoId);
-        if (data === undefined) return;
-        const response = await axiosInstance.put(`/publicacao/`, publicacaoId);
+    async update(publicacaoId: number, data: FormData) {
+        const response = await axiosInstance.put(`/publicacao/${publicacaoId}/`, data);
         return response.data;
     }
 
-    async destroy(publicacaoId: any) {
-        const data = this.getId(publicacaoId);
-        if (data === undefined) return;
-        const response = await axiosInstance.delete(`/publicacao/`, publicacaoId);
+    async destroy(publicacaoId: number) {
+        const response = await axiosInstance.delete(`/publicacao/${publicacaoId}/`);
         return response.data;
     }
 

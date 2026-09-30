@@ -5,6 +5,7 @@ import Cadastro from "./components/FormCadastro";
 import Publicacoes from "./pages/Publicacoes";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Comentarios from "./pages/Comentarios";
+import PublicacaoDetalhe from "./components/Publicacao/detail-publicacao";
 
 function App() {
 	return (
@@ -16,7 +17,20 @@ function App() {
               <Publicacoes />
             </ProtectedRoute>
           } />
+          <Route path="/publicacoes/:id" element={
+            <ProtectedRoute>
+              <PublicacaoDetalhe />
+            </ProtectedRoute>
+          } />
           <Route path="/comentarios" element={<Comentarios />} />
+          {/**
+           * 
+          <Route path="/comentarios/:id" element={
+            <ProtectedRoute>
+              <ComentarioDetalhe />
+            </ProtectedRoute>
+          } />
+          */}
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
         </Routes>
