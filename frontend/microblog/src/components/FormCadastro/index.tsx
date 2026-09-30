@@ -10,7 +10,10 @@ const schema = yup.object().shape({
                 .required("Você precisa colocar um username válido para entrar no sistema!"),
         nome: yup.string()
                 .required("Você precisa colocar um username válido para entrar no sistema!"),
-        password: yup.string().required("Você precisa da senha para entrar no sistema!"),
+        password: yup.string().required('Informe uma senha.'),
+        confirmPassword: yup.string()
+            .oneOf([yup.ref('password')], 'As senhas devem ser iguais!')
+            .required('Confirme sua senha.'),
 });
 
 export default function FormCadastro() : any {
@@ -30,7 +33,7 @@ export default function FormCadastro() : any {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = (data: any) => {
+    const dataHandler = ({ confirmPassword, ...data }: any) => {
         console.log(data);
         cadastrar(data);
     }
@@ -90,6 +93,21 @@ export default function FormCadastro() : any {
                                 (<span className="feedback danger" role="alert" id="danger">
                                     <i className="fas fa-times-circle" aria-hidden="true"></i>
                                     {errors.password?.message}
+                                </span>
+                                )}
+                        </div>
+                        <div className={`br-input mb-3 ${errors.confirmPassword !== undefined ? "danger" : ""}`}>
+                            <input
+                                id="confirmPassword"
+                                type="password"
+                                placeholder="Confirmar Senha"
+                                {...register("confirmPassword")}
+                                />
+                                {
+                                errors.confirmPassword !== undefined && 
+                                (<span className="feedback danger" role="alert" id="danger">
+                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                                    {errors.confirmPassword?.message}
                                 </span>
                                 )}
                         </div>
