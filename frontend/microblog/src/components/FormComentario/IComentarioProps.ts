@@ -1,0 +1,3 @@
+interface IComentarioProps {
+    publicacao: any;
+}

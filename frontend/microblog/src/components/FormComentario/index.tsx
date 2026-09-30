@@ -4,37 +4,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import usuarioService from "../../services/usuarioService";
 import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
-import publicacaoService from "../../services/publicacaoService";
+import comentarioService from "../../services/comentarioService";
 
 const schema = yup.object().shape({
-        titulo: yup
+        mensagem: yup
                 .string()
-                .required("O Título é necessário")
-                .max(200, 'O Título não pode ter mais de 200 caracteres'),
-        imagem: yup
-                .mixed()
-                .test('fileType', 'Apenas arquivos de imagem são permitidos', (arq) => {
-                    if(!arq || !(arq instanceof FileList) || arq.length === 0) {
-                        return false;
-                    }
-                    const file = arq[0];
-                    return file.type.startsWith('image/');
-                }),
-        descricao: yup
-                   .string()
-                   .required("A descrição é necessária")
-                   .max(1200, "A descrição não pode ter mais de 1200 caracteres"),
-        autor: yup
-               .string()
-               .required("O autor é necessário"),
-        publicado_em: yup
-                      .date()
-                      .default(new Date())
+                .required("A mensagem é necessária")
+                .max(400, 'A mensagem não pode ter mais de 400 caracteres'),
 });
 
 
-export default function FormComentario() {
+export default function FormComentario(props: IComentarioProps) {
 
+
+    const { publicacao } = props;
     const { user } = useAuth();
     const id = user?.id;
     
@@ -54,8 +37,8 @@ export default function FormComentario() {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = async (data: any) => {
-        const bd = await publicacaoService.create(data);
+    const dataHandler = async (data: { mensagem: string}) => {
+        const bd = await comentarioService.create(publicacao, data);
         console.log(bd);
     }
     const errorHandler = (errors: any) => {
@@ -69,83 +52,23 @@ export default function FormComentario() {
             <div className="row d-flex justify-content-center">
                 <div className="grid col-10">
                     <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
-                        <div className={`br-input mb-3 ${errors.titulo !== undefined ? "danger" : ""}`}>
+                        <div className={`br-input mb-3 ${errors.mensagem !== undefined ? "danger" : ""}`}>
                             <input 
-                                id="titulo"
+                                id="mensagem"
                                 type="text"
-                                placeholder="Título"
-                                {...register("titulo")}
+                                placeholder="Insira um comentário"
+                                {...register("mensagem")}
                                 />
                                 {
-                                errors.titulo !== undefined && 
+                                errors.mensagem !== undefined && 
                                 (<span className="feedback danger" role="alert" id="danger">
                                     <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.titulo?.message}
+                                    {errors.mensagem?.message}
                                 </span>
                                 )}
                                 
                         </div>
-                        <div className={`mb-3 ${errors.imagem !== undefined ? "danger" : ""}`}>
-                            <label>Imagem</label>
-                            <br></br>
-                            <input 
-                                id="imagem"
-                                type="file"
-                                accept="image/*"
-                                placeholder="Imagem"
-                                {...register("imagem")}
-                                />
-                                {
-                                errors.imagem !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.imagem?.message}
-                                </span>
-                                )}
-                                
-                        </div>
-                        <div className={`br-input mb-3 ${errors.descricao !== undefined ? "danger" : ""}`}>
-                            <input
-                                id="descricao"
-                                type="text"
-                                placeholder="Descrição"
-                                {...register("descricao")}
-                                />
-                                {
-                                errors.descricao !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.descricao?.message}
-                                </span>
-                                )}
-                        </div>
-                        <div className={`br-input mb-3 ${errors.autor !== undefined ? "danger" : ""}`}>
-                            <label htmlFor="autor">Autor</label>
-                            <br></br>
-                            <select
-                                id="autor"
-                                {...register('autor')}
-                                aria-placeholder="Autor"
-                            >
-                                <option>{user?.username}</option>
-                            </select>
-                        </div>
-                        <div className={`br-input mb-3`}>
-                            <input
-                                id="publicado_em"
-                                type="date"
-                                placeholder="Data de Publicação"
-                                {...register("publicado_em")}
-                                />
-                                {
-                                errors.publicado_em !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.publicado_em?.message}
-                                </span>
-                                )}
-                        </div>
-                        <input type="submit" value="Publicar" className="br-button primary block warning"/>
+                        <input type="submit" value="Comentar" className="br-button primary block warning"/>
                     </form>
                 </div>
             </div>

@@ -11,18 +11,13 @@ class comentarioService {
         return response.data.results;
     }
 
-    async create(data: any) {
+    async create(publicacao: string, data: { mensagem : string }) {
         const formData = new FormData();
-        formData.append("titulo", data.titulo);
-        formData.append("descricao", data.descricao);
-
-        const imagem = data.imagem instanceof FileList ? data.imagem[0] : data.imagem;
-        if (imagem instanceof File) {
-            formData.append("imagem", imagem);
-        }
+        formData.append("publicacao", publicacao);
+        formData.append("mensagem", data.mensagem);
 
         const response = await axiosInstance.post(`comentario/`, formData);
-        return response.data.results;
+        return response.data;
 
     }
     
