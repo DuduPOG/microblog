@@ -1,4 +1,6 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cadastroService from "../../services/cadastroService";
@@ -7,9 +9,9 @@ import BotaoLogin from "../Botao-Login";
 
 const schema = yup.object().shape({
         username: yup.string()
-                .required("Você precisa colocar um username válido para entrar no sistema!"),
+                .required("Username deve ser preenchido"),
         nome: yup.string()
-                .required("Você precisa colocar um username válido para entrar no sistema!"),
+                .required("Nome deve ser preenchido"),
         password: yup.string().required('Informe uma senha.'),
         confirmPassword: yup.string()
             .oneOf([yup.ref('password')], 'As senhas devem ser iguais!')
@@ -19,23 +21,24 @@ const schema = yup.object().shape({
 export default function FormCadastro() : any {
 
     const navigate = useNavigate();
-
-    function cadastrar(data: any) {
-        cadastroService.cadastrar(data);
-        navigate('/login');
-    }
+    const [cadastroError, setCadastroError] = useState<string | null>(null);
 
     const {
         handleSubmit,
         register,
-        formState: {errors}
+        formState: {errors, isSubmitting}
     } = useForm({
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = ({ confirmPassword, ...data }: any) => {
-        console.log(data);
-        cadastrar(data);
+    const dataHandler = async ({ confirmPassword, ...data }: any) => {
+        setCadastroError(null);
+        try {
+            await cadastroService.cadastrar(data);
+            navigate('/login', { replace: true });
+        } catch (error: unknown) {
+            setCadastroError("Não foi possível realizar o cadastro. Tente novamente.");
+        }
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
@@ -49,6 +52,7 @@ export default function FormCadastro() : any {
                 <div className="grid col-10">
                     <h1>Cadastro</h1>
                     <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
+                        {cadastroError && <p className="feedback danger" role="alert">{cadastroError}</p>}
                         <div className={`br-input mb-3 ${errors.username !== undefined ? "danger" : ""}`}>
                             <input 
                                 id="username"
@@ -111,7 +115,7 @@ export default function FormCadastro() : any {
                                 </span>
                                 )}
                         </div>
-                        <input type="submit" value="Cadastrar" className="br-button primary block warning"/>
+                        <input type="submit" value={isSubmitting ? "Cadastrando..." : "Cadastrar"} className="br-button primary block warning" disabled={isSubmitting}/>
                     </form>
                 </div>
             </div>
