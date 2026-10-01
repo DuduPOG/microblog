@@ -38,7 +38,7 @@ export default function Publicacao(){
 
     return (
         <>
-        <h1>Detalhamento</h1>
+        <h1>Publicações</h1>
             <div className="row">
             {publicacoes.map((publicacao: PublicacaoDetalhe) => {
                 return (

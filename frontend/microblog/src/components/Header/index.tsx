@@ -4,7 +4,7 @@ import { useAuth } from "../../auth/AuthProvider";
 function Header() {
   const { user, signed, logout } = useAuth();
   const navigate = useNavigate();
-  const nome = user?.nome || user?.username || "Usuário";
+  const nome = user?.username || user?.nome || "Usuário";
 
     return (
     <>
