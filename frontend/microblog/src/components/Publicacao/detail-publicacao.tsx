@@ -48,7 +48,7 @@ export default function PublicacaoDetalhe() {
         })
         .catch(() => setErro("Não foi possível carregar esta publicação."))
         .finally(() => setCarregando(false));
-        comentarioService.getAll()
+        comentarioService.publicacao(id)
         .then((res: any) => {
             setComentarios(res);
             console.log(res);
@@ -95,6 +95,7 @@ export default function PublicacaoDetalhe() {
             <Header />
             <div className="container mb-4">
                 <Botao label="Voltar às publicações" action={() => navigate('/publicacoes')} className="br-button secondary mb-3" />
+                <h1>Detalhamento</h1>
                 {!carregando && publicacao && (
                     <div className="row justify-content-center">
                         <article className="col-12 col-lg-9">
@@ -174,6 +175,11 @@ export default function PublicacaoDetalhe() {
                             <div className="br-card" key={comentario.id}>
                                 <div className="card-header">
                                     <div className="d-flex">
+                                        <span className="br-avatar" title={comentario.autor?.username}>
+                                            <span className="content bg-blue-vivid-50 text-pure-0">
+                                            {comentario.autor?.username[0].toUpperCase()}
+                                            </span>
+                                        </span>
                                         <div className="ml-3">
                                             <div className="text-weight-semi-bold text-up-02">
                                             <p>{comentario.autor?.username || comentario.autor?.nome || "Usuário Comum"}</p>

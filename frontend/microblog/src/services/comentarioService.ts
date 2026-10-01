@@ -2,8 +2,13 @@ import { axiosInstance } from "./axiosInstance";
 
 class comentarioService {
     async getId(comentarioId: any) {
-        const response = await axiosInstance.get(`/comentario/${comentarioId}`);
+        const response = await axiosInstance.get(`/comentario/${comentarioId}/`);
         return response.data;
+    }
+
+    async publicacao(publicacaoId: any) {
+        const response = await axiosInstance.get(`/publicacao/${publicacaoId}/comentarios/`);
+        return response.data.results;
     }
 
     async getAll() {
