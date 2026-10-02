@@ -1,0 +1,103 @@
+.login-page {
+  --cadastro-amarelo: #fabd10;
+  min-height: 100vh;
+  padding: var(--spacing-scale-2x);
+  background: #fff;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 1000px;
+  min-height: min(736px, calc(100vh - 2 * var(--spacing-scale-2x)));
+  padding: var(--spacing-scale-2x);
+  gap: var(--spacing-scale-2x);
+  background: var(--blue-warm-vivid-80);
+  border-radius: 64px;
+  color: #fff;
+}
+
+.login-brand {
+  flex: 0 0 45.6%;
+  padding: var(--spacing-scale-4x);
+  background: var(--pure-100);
+  border-radius: 56px;
+}
+.login-brand img {
+  width: 100%;
+  max-width: 385px;
+  height: auto;
+}
+
+.login-form {
+  flex: 1 1 0;
+  padding: var(--spacing-scale-4x) var(--spacing-scale-3x);
+}
+.login-form-inner {
+  width: 100%;
+  max-width: 290px;
+}
+.login-titulo {
+  margin: 0 0 var(--spacing-scale-4x);
+  color: #fff;
+  font-size: var(--font-size-scale-up-06);
+  font-weight: var(--font-weight-light);
+}
+
+.login-card .br-input input {
+  margin-top: 0;
+  background: #fff;
+  border-radius: var(--surface-rounder-lg);
+  color: var(--gray-80);
+}
+.login-card .br-input:not(.danger) input {
+  border: 1px solid #000;
+}
+.login-card .br-input input::placeholder {
+  color: var(--gray-60);
+  font-style: italic;
+}
+
+.login-card .br-button.primary.login-submit {
+  --button-radius: var(--surface-rounder-lg);
+  margin: var(--spacing-scale-3x) 0 0;
+  background-color: var(--cadastro-amarelo);
+  color: var(--blue-warm-vivid-90);
+}
+
+.cadastro-login-link {
+  color: #fff;
+  text-decoration: none;
+}
+.cadastro-login-link:hover {
+  text-decoration: underline;
+}
+.cadastro-login-link strong {
+  color: var(--green-cool-vivid-20);
+  font-weight: var(--font-weight-bold);
+}
+
+.login-card .feedback.danger {
+  color: var(--red-vivid-20);
+}
+
+.login-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 991.98px) {
+  .login-card {
+    max-width: 480px;
+    border-radius: var(--surface-rounder-lg);
+  }
+  .login-form {
+    padding: var(--spacing-scale-3x) var(--spacing-scale-2x);
+  }
+}

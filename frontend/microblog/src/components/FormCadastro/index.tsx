@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import cadastroService from "../../services/cadastroService";
-import { useNavigate } from "react-router-dom";
-import BotaoLogin from "../Botao-Login";
+import { Link, useNavigate } from "react-router-dom";
+import logoPnp from "../../assets/logo-pnp.png";
+import "./cadastro.css";
 
 const schema = yup.object().shape({
         username: yup.string()
@@ -45,82 +45,53 @@ export default function FormCadastro() : any {
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
     };
 
-    return (
-        <>
-        <div className="container">
-            <div className="row d-flex justify-content-center">
-                <div className="grid col-10">
-                    <h1>Cadastro</h1>
-                    <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
-                        {cadastroError && <p className="feedback danger" role="alert">{cadastroError}</p>}
-                        <div className={`br-input mb-3 ${errors.username !== undefined ? "danger" : ""}`}>
-                            <input 
-                                id="username"
-                                type="text"
-                                placeholder="Username"
-                                {...register("username")}
-                                />
-                                {
-                                errors.username !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.username?.message}
-                                </span>
-                                )}
-                                
-                        </div>
-                        <div className={`br-input mb-3 ${errors.nome !== undefined ? "danger" : ""}`}>
-                            <input 
-                                id="nome"
-                                type="text"
-                                placeholder="Nome"
-                                {...register("nome")}
-                                />
-                                {
-                                errors.nome !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.nome?.message}
-                                </span>
-                                )}
-                                
-                        </div>
-                        <div className={`br-input mb-3 ${errors.password !== undefined ? "danger" : ""}`}>
-                            <input
-                                id="password"
-                                type="password"
-                                placeholder="Senha"
-                                {...register("password")}
-                                />
-                                {
-                                errors.password !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.password?.message}
-                                </span>
-                                )}
-                        </div>
-                        <div className={`br-input mb-3 ${errors.confirmPassword !== undefined ? "danger" : ""}`}>
-                            <input
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="Confirmar Senha"
-                                {...register("confirmPassword")}
-                                />
-                                {
-                                errors.confirmPassword !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.confirmPassword?.message}
-                                </span>
-                                )}
-                        </div>
-                        <input type="submit" value={isSubmitting ? "Cadastrando..." : "Cadastrar"} className="br-button primary block warning" disabled={isSubmitting}/>
-                    </form>
-                </div>
-            </div>
+    const campo = (
+        id: "username" | "nome" | "password" | "confirmPassword",
+        label: string,
+        type: string,
+        placeholder: string,
+    ) => (
+        <div className={`br-input large mb-3 ${errors[id] !== undefined ? "danger" : ""}`}>
+            <label htmlFor={id} className="cadastro-sr-only">{label}</label>
+            <input
+                id={id}
+                type={type}
+                placeholder={placeholder}
+                {...register(id)}
+                />
+                {
+                errors[id] !== undefined &&
+                (<span className="feedback danger" role="alert" id={`${id}-erro`}>
+                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                    {errors[id]?.message}
+                </span>
+                )}
         </div>
-        <BotaoLogin/>
-        </>
+    );
+
+    return (
+        <div className="cadastro-page d-flex justify-content-center align-items-center">
+            <section className="cadastro-card d-flex" aria-labelledby="cadastro-titulo">
+                <div className="cadastro-brand d-none d-md-flex justify-content-center align-items-center">
+                    <img src={logoPnp} alt="Ícone PNP" />
+                </div>
+                <div className="cadastro-form d-flex flex-column align-items-center justify-content-center">
+                    <div className="cadastro-form-inner">
+                        <h1 id="cadastro-titulo" className="cadastro-titulo">Cadastre-se</h1>
+                        <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
+                            {cadastroError && <p className="feedback danger" role="alert">{cadastroError}</p>}
+                            {campo("username", "Username", "text", "Username")}
+                            {campo("nome", "Nome", "text", "Nome")}
+                            {campo("password", "Senha", "password", "Senha")}
+                            {campo("confirmPassword", "Confirme a senha", "password", "Confirme a senha")}
+                            <input type="submit" value={isSubmitting ? "Criando..." : "Criar"} className="br-button primary large block cadastro-submit" disabled={isSubmitting}/>
+                        </form>
+                        <Link to="/login" className="cadastro-login-link d-block text-center mt-3">
+                            Já tenho <strong>conta</strong>
+                        </Link>
+                    </div>
+                </div>
+            </section>
+        </div>
     )
 }
