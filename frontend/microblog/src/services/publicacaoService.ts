@@ -22,7 +22,7 @@ class publicacaoService {
         }
 
         const response = await axiosInstance.post(`publicacao/`, formData);
-        return response.data.results;
+        return response.data;
 
     }
     

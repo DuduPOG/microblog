@@ -24,9 +24,6 @@ const schema = yup.object().shape({
                    .string()
                    .required("A descrição é necessária")
                    .max(1200, "A descrição não pode ter mais de 1200 caracteres"),
-        publicado_em: yup
-                      .date()
-                      .default(new Date())
 });
 
 
@@ -76,58 +73,55 @@ export default function FormPublicacao() {
                                 {
                                 errors.titulo !== undefined && 
                                 (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                                    <i className="fas fa-times-circle" aria-hidden="true">
+                                    </i>
                                     {errors.titulo?.message}
                                 </span>
                                 )}
                                 
                         </div>
-                        <div className={`mb-3 ${errors.imagem !== undefined ? "danger" : ""}`}>
-                            <label>Imagem</label>
-                            <br></br>
+                        <div className='br-upload mb-3' data-danger="data-danger">
+                            <label className="upload-label" htmlFor="imagem">
+                                <span>Imagem</span>
+                            </label>
                             <input 
                                 id="imagem"
+                                className="upload-input"
                                 type="file"
-                                accept="image/*"
-                                placeholder="Imagem"
+                                aria-label="Enviar Imagem"
                                 {...register("imagem")}
                                 />
+                            <div className="upload-list"></div>
                                 {
                                 errors.imagem !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                                (<span className="feedback danger mt-1" role="alert" id="danger">
+                                    <i className="fas fa-times-circle" aria-hidden="true">
+                                    </i>
                                     {errors.imagem?.message}
                                 </span>
                                 )}
                                 
                         </div>
-                        <div className={`br-input mb-3 ${errors.descricao !== undefined ? "danger" : ""}`}>
-                            <input
+                        <div className={`br-textarea mb-3 ${errors.descricao !== undefined ? "danger" : ""}`}>
+                            <label htmlFor="descricao" >Descrição</label>
+                            <textarea
                                 id="descricao"
-                                type="text"
-                                placeholder="Descrição"
+                                aria-controls="limitmax"
+                                placeholder="Insira uma descrição"
+                                maxLength={1200}
                                 {...register("descricao")}
                                 />
+                                <div className="text-base mt-1">
+                                    <span className="limit" aria-live="polite">
+                                        Limite máximo de <strong>1200</strong> caracteres
+                                    </span>
+                                    <span className="current" aria-live="polite" role="status" id="limitmax"></span>
+                                </div>
                                 {
                                 errors.descricao !== undefined && 
                                 (<span className="feedback danger" role="alert" id="danger">
                                     <i className="fas fa-times-circle" aria-hidden="true"></i>
                                     {errors.descricao?.message}
-                                </span>
-                                )}
-                        </div>
-                        <div className={`br-input mb-3`}>
-                            <input
-                                id="publicado_em"
-                                type="date"
-                                placeholder="Data de Publicação"
-                                {...register("publicado_em")}
-                                />
-                                {
-                                errors.publicado_em !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
-                                    {errors.publicado_em?.message}
                                 </span>
                                 )}
                         </div>

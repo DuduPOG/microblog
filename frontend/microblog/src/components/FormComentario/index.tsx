@@ -52,13 +52,21 @@ export default function FormComentario(props: IComentarioProps) {
             <div className="row d-flex justify-content-center">
                 <div className="grid col-10">
                     <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
-                        <div className={`br-input mb-3 ${errors.mensagem !== undefined ? "danger" : ""}`}>
-                            <input 
+                        <div className={`br-textarea mb-3 ${errors.mensagem !== undefined ? "danger" : ""}`}>
+                            <label htmlFor="mensagem">Comentário</label>
+                            <textarea 
                                 id="mensagem"
-                                type="text"
+                                aria-controls="limitmax"
+                                maxLength={400}
                                 placeholder="Insira um comentário"
                                 {...register("mensagem")}
                                 />
+                                <div className="text-base mt-1">
+                                    <span className="limit" aria-live="polite">
+                                        Limite máximo de <strong>400</strong> caracteres
+                                    </span>
+                                    <span className="current" aria-live="polite" role="status" id="limitmax"></span>
+                                </div>
                                 {
                                 errors.mensagem !== undefined && 
                                 (<span className="feedback danger" role="alert" id="danger">
