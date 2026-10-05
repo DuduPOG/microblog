@@ -51,7 +51,8 @@ export default function Comentarios() {
         <>
             <Header />
             <Botao label="Voltar ás Publicações" action={() => navigate('/publicacoes')} className="br-button secondary mb-3"/>
-            <main className="container mb-4">
+            <Botao label="Voltar á Publicação" action={() => navigate(`/publicacoes/${id}`)} className="br-button secondary mb-3"/>
+            <div className="container mb-4">
                 <h1>Comentários</h1>
                 {id ? (
                     <FormComentario publicacao={id} />
@@ -72,8 +73,7 @@ export default function Comentarios() {
                         />
                     </>
                 )}
-                <BotaoVoltar />
-            </main>
+            </div>
         </>
     );
 }
