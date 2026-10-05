@@ -26,10 +26,8 @@ class comentarioService {
 
     }
     
-    async update(comentarioId: any) {
-        const data = this.getId(comentarioId);
-        if (data === undefined) return;
-        const response = await axiosInstance.put(`/comentario/`, comentarioId);
+    async update(comentarioId: number, mensagem: string) {
+        const response = await axiosInstance.patch(`/comentario/${comentarioId}/`, { mensagem });
         return response.data;
     }
 

@@ -5,6 +5,7 @@ import usuarioService from "../../services/usuarioService";
 import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import publicacaoService from "../../services/publicacaoService";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
         titulo: yup
@@ -31,6 +32,7 @@ export default function FormPublicacao() {
 
     const { user } = useAuth();
     const id = user?.id;
+    const navigate = useNavigate();
     
     useEffect(() => {
         if (id === undefined) return;
@@ -43,6 +45,7 @@ export default function FormPublicacao() {
     const {
         handleSubmit,
         register,
+        reset,
         formState: {errors}
     } = useForm({
         resolver: yupResolver(schema)
@@ -51,6 +54,7 @@ export default function FormPublicacao() {
     const dataHandler = async (data: any) => {
         const bd = await publicacaoService.create(data);
         console.log(bd);
+        navigate('/publicacoes');
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
@@ -125,7 +129,8 @@ export default function FormPublicacao() {
                                 </span>
                                 )}
                         </div>
-                        <input type="submit" value="Publicar" className="br-button primary block warning"/>
+                        <input type="button" onClick={() => {reset()}} value="Limpar" className="br-button secondary" />
+                        <input type="submit" value="Publicar" className="br-button primary warning"/>
                     </form>
                 </div>
             </div>

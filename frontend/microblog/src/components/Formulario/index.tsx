@@ -75,13 +75,12 @@ export default function Formulario() : any {
                         <h1 id="login-titulo" className="login-titulo">Login</h1>
                         <form onSubmit={handleSubmit(dataHandler)}>
                             {loginError && <p className="feedback danger" role="alert">{loginError}</p>}
-                            {campo("username", "Username", "text", "Username")}
-                            {campo("senha", "Senha", "password", "Senha")}
+                            {campo("username", "username", "text", "Username")}
+                            {campo("password", "password", "password", "Senha")}
                             <input 
                                 type="submit" 
-                                value={isSubmitting ? "Entrand..." : "Entrar"} 
+                                value={"Entrar"} 
                                 className="br-button primary large block login-submit" 
-                                disabled={isSubmitting}
                                 />
                         </form>
                         <Link to='/cadastro' className="cadastro-login-link d-block text-center mt-3">

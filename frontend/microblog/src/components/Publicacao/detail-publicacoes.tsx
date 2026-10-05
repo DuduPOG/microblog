@@ -12,7 +12,7 @@ interface PublicacaoDetalhe {
     autor?: { nome?: string; username?: string } | null;
 }
 
-export default function Publicacao(){
+export default function Publicacoes(){
     
     const [publicacoes, setPublicacoes] = useState<PublicacaoDetalhe[]>([]);
 
@@ -38,28 +38,39 @@ export default function Publicacao(){
 
     return (
         <>
-        <h1>Publicações</h1>
+        <div className="row">
+        <h1>Feed de Publicações</h1>
+        <Botao label="Adicionar Publicação" action={() => navigate('/nova-publicacao')} className="br-button primary mb-3" />
+        </div>
             <div className="row">
             {publicacoes.map((publicacao: PublicacaoDetalhe) => {
                 return (
                     <>
                     <div className="col-sm-6 col-md-4 col-lg-3" key={publicacao.id}>
-                        <div className="br-card h-fixed w-fixed hover">
+                        <div className="br-card hover" style={{width: "300px", height: "300px"}}>
                             <div className="card-content d-flex justify-content-center">
                                 <img
                                     src={publicacao.imagem || imgPadrao}
                                     alt={publicacao.imagem ? publicacao.titulo : "Publicação sem imagem"}
-                                    style={{width: "auto", height: "auto"}}
+                                    style={{width: "auto", maxWidth: "200px", height: "100px", maxHeight: "150px"}}
                                 />
                              <div className="ml-auto">
-                                <Botao label="Detalhar" action={() => detalhar(publicacao.id)} className="br-button primary circle" />
+                                <Botao 
+                                    label=""
+                                    action={() => detalhar(publicacao.id)}
+                                    className="br-button primary circle"
+                                    icon="fa fa-ellipsis-v"
+                                />
                             </div>
                             </div>
                             <div className="card-content row justify-content-center">
                                 <h2>{publicacao.titulo}</h2>
                                 <p>{publicacao.descricao}</p>
+                            <Botao
+                                label="Comentar"
+                                action={() => navigate(`/comentarios/${publicacao.id}`)}
+                                className="br-button warning mb-3" />
                             </div>
-                            
                             </div>
                         </div>
                     </>

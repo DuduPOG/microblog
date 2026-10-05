@@ -5,6 +5,7 @@ import usuarioService from "../../services/usuarioService";
 import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import comentarioService from "../../services/comentarioService";
+import Botao from "../Botao";
 
 const schema = yup.object().shape({
         mensagem: yup
@@ -32,13 +33,14 @@ export default function FormComentario(props: IComentarioProps) {
     const {
         handleSubmit,
         register,
+        reset,
         formState: {errors}
     } = useForm({
         resolver: yupResolver(schema)
     });
 
     const dataHandler = async (data: { mensagem: string}) => {
-        const bd = await comentarioService.create(publicacao, data);
+        const bd = await comentarioService.create(String(publicacao), data);
         console.log(bd);
     }
     const errorHandler = (errors: any) => {
@@ -76,7 +78,12 @@ export default function FormComentario(props: IComentarioProps) {
                                 )}
                                 
                         </div>
-                        <input type="submit" value="Comentar" className="br-button primary block warning"/>
+                        <Botao
+                            label="Limpar"
+                            action={() => {reset()}}
+                            className="br-button secondary mb-3"
+                        />
+                        <input type="submit" value="Comentar" className="br-button primary warning"/>
                     </form>
                 </div>
             </div>

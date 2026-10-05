@@ -1,16 +1,13 @@
-import BotaoVoltar from "../../components/Botao-Voltar";
-import FormPublicacao from "../../components/FormPublicacao";
 import Header from "../../components/Header";
-import Publicacao from "../../components/Publicacao/detail-publicacoes";
+import Publicacoes from "../../components/Publicacao/detail-publicacoes";
 
-export default function Publicacoes() {
+export default function Publicacao() {
+
+
     return (
         <>
         <Header/>
-        <h1>Adicionar Publicação</h1>
-        <FormPublicacao/>
-        <Publicacao/>
-        <BotaoVoltar/>
+        <Publicacoes/>
         </>
     )
 }

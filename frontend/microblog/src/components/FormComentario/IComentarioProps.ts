@@ -1,3 +1,3 @@
 interface IComentarioProps {
-    publicacao: any;
+    publicacao: string | number;
 }

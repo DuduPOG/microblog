@@ -5,8 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import Botao from "../Botao";
 import Header from "../Header";
-import FormComentario from "../FormComentario";
 import comentarioService from "../../services/comentarioService";
+import ListaComentarios, { type ComentarioItem } from "../ListaComentarios";
 
 interface PublicacaoDetalhe {
     id: number;
@@ -17,20 +17,12 @@ interface PublicacaoDetalhe {
     autor?: { id?: number | string; nome?: string; username?: string } | null;
 }
 
-interface ComentarioDetalhe {
-    id: number;
-    autor?: { id?: number | string; nome?: string; username?: string } | null;
-    mensagem: string;
-    publicado_em: string;
-}
-
-
 export default function PublicacaoDetalhe() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [publicacao, setPublicacao] = useState<PublicacaoDetalhe | null>(null);
-    const [comentarios, setComentarios] = useState<ComentarioDetalhe[]>([]);
+    const [comentarios, setComentarios] = useState<ComentarioItem[]>([]);
     const [rascunho, setRascunho] = useState({ titulo: "", descricao: "" });
     const [imagem, setImagem] = useState<File | null>(null);
     const [editando, setEditando] = useState(false);
@@ -57,6 +49,12 @@ export default function PublicacaoDetalhe() {
 
     const ehAutor = publicacao?.autor?.id !== undefined &&
         Number(publicacao.autor.id) === Number(user?.id);
+
+    function atualizarComentario(comentarioId: number, mensagem: string) {
+        setComentarios((atuais) => atuais.map((comentario) =>
+            comentario.id === comentarioId ? { ...comentario, mensagem } : comentario
+        ));
+    }
 
     async function salvarEdicao(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -104,7 +102,7 @@ export default function PublicacaoDetalhe() {
                                     <img
                                         src={publicacao.imagem || imgPadrao}
                                         alt={publicacao.imagem ? publicacao.titulo : "Publicação sem imagem"}
-                                        style={{ width: "100%", maxHeight: "480px", objectFit: "contain" }}
+                                        style={{ width: "181,65px", height: "186px", objectFit: "contain" }}
                                     />
                                 </div>
                                 <div className="card-content">
@@ -165,35 +163,22 @@ export default function PublicacaoDetalhe() {
                         </article>
                     </div>
                 )}
-                <FormComentario publicacao={id} />
-                {comentarios && (
+                {publicacao &&  
+                <>
+                <Botao
+                    label="Comentar"
+                    action={() => navigate(`/comentarios/${publicacao.id}`)}
+                    className="br-button warning mb-3"
+                    />
+                </>
+                }
+                {comentarios.length > 0 && (
                     <>
-                    <h2>Comentários</h2>
-                    {comentarios.map((comentario: ComentarioDetalhe) => {
-                        return (
-                            <>
-                            <div className="br-card" key={comentario.id}>
-                                <div className="card-header">
-                                    <div className="d-flex">
-                                        <span className="br-avatar" title={comentario.autor?.username}>
-                                            <span className="content bg-blue-vivid-50 text-pure-0">
-                                            {comentario.autor?.username[0].toUpperCase()}
-                                            </span>
-                                        </span>
-                                        <div className="ml-3">
-                                            <div className="text-weight-semi-bold text-up-02">
-                                            <p>{comentario.autor?.username || comentario.autor?.nome || "Usuário Comum"}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-content">
-                                    <p>{comentario.mensagem}</p>
-                                </div>
-                            </div>
-                            </>
-                        )
-                    })}
+                        <h2>Comentários</h2>
+                        <ListaComentarios
+                            comentarios={comentarios}
+                            onComentarioAtualizado={atualizarComentario}
+                        />
                     </>
                 )}
             </div>

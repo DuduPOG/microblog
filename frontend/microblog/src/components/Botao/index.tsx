@@ -4,7 +4,7 @@ import { IBotaoProps } from "./IBotaoProps";
 
 export default function Botao(props:IBotaoProps) {
 
-    const { action, label, className } = props;
+    const { action, label, className, icon } = props;
 
     return (
         <>
@@ -13,6 +13,7 @@ export default function Botao(props:IBotaoProps) {
                 onClick={action}
             >
                 {label}
+            <i className={`${icon}`}></i>
             </button>
         </>
     )

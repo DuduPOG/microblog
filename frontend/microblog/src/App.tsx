@@ -6,6 +6,7 @@ import Publicacoes from "./pages/Publicacoes";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Comentarios from "./pages/Comentarios";
 import PublicacaoDetalhe from "./components/Publicacao/detail-publicacao";
+import NovaPublicação from "./pages/Publicacoes/insert-publicacoes";
 
 function App() {
 	return (
@@ -17,20 +18,17 @@ function App() {
               <Publicacoes />
             </ProtectedRoute>
           } />
+          <Route path="/nova-publicacao" element={
+            <ProtectedRoute>
+              <NovaPublicação />
+            </ProtectedRoute>
+          } />
           <Route path="/publicacoes/:id" element={
             <ProtectedRoute>
               <PublicacaoDetalhe />
             </ProtectedRoute>
           } />
-          <Route path="/comentarios" element={<Comentarios />} />
-          {/**
-           * 
-          <Route path="/comentarios/:id" element={
-            <ProtectedRoute>
-              <ComentarioDetalhe />
-            </ProtectedRoute>
-          } />
-          */}
+          <Route path="/comentarios/:id" element={<Comentarios />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
         </Routes>

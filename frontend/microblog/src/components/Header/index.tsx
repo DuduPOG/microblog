@@ -1,5 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
+import logoPnp from "../../assets/logo-pnp.png";
 
 function Header() {
   const { user, signed, logout } = useAuth();
@@ -10,13 +11,8 @@ function Header() {
     <>
       <header className="br-header compact">
         <div className="container-sm">
+          <img src={logoPnp} alt="Cabeçalho PNP" height={50} />
           <div>
-            <div className="br-list">
-              <div className="header cols-2">
-                <Link to="/publicacoes" className="br-item" >Publicações</Link>
-                <Link to="/comentarios" className="br-item">Comentários</Link>
-              </div>
-            </div>
           </div>
         </div>
       {signed && user && (
