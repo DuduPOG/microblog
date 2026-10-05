@@ -129,8 +129,10 @@ export default function FormPublicacao() {
                                 </span>
                                 )}
                         </div>
-                        <input type="button" onClick={() => {reset()}} value="Limpar" className="br-button secondary" />
-                        <input type="submit" value="Publicar" className="br-button primary warning"/>
+                        <div style={{textAlign: "end"}}>
+                            <input type="button" onClick={() => {reset()}} value="Limpar" className="br-button secondary" />
+                            <input type="submit" value="Publicar" className="br-button primary warning"/>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -78,12 +78,14 @@ export default function FormComentario(props: IComentarioProps) {
                                 )}
                                 
                         </div>
-                        <Botao
-                            label="Limpar"
-                            action={() => {reset()}}
-                            className="br-button secondary mb-3"
-                        />
-                        <input type="submit" value="Comentar" className="br-button primary warning"/>
+                        <div style={{textAlign: "end"}} >
+                            <Botao
+                                label="Limpar"
+                                action={() => {reset()}}
+                                className="br-button secondary m-1"
+                                />
+                            <input type="submit" value="Comentar" className="br-button primary warning"/>
+                        </div>
                     </form>
                 </div>
             </div>

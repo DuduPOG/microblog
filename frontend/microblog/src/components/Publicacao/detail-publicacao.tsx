@@ -91,18 +91,20 @@ export default function PublicacaoDetalhe() {
     return (
         <>
             <Header />
-            <div className="container mb-4">
-                <Botao label="Voltar às publicações" action={() => navigate('/publicacoes')} className="br-button secondary mb-3" />
-                <h1>Detalhamento</h1>
+            <div className="container">
+                <div style={{textAlign: "initial"}}>
+                    <Botao label="Voltar às publicações" action={() => navigate('/publicacoes')} className="br-button secondary m-3" />
+                </div>
+                <h1 style={{textAlign: "center"}} >Detalhamento</h1>
                 {!carregando && publicacao && (
-                    <div className="row justify-content-center">
+                    <div className="d-flex justify-content-center">
                         <article className="col-12 col-lg-9">
-                            <div className="br-card">
+                            <div className="br-card" style={{textAlign: "center", maxHeight: "600px"}}>
                                 <div className="card-content">
                                     <img
                                         src={publicacao.imagem || imgPadrao}
                                         alt={publicacao.imagem ? publicacao.titulo : "Publicação sem imagem"}
-                                        style={{ width: "181,65px", height: "186px", objectFit: "contain" }}
+                                        style={{ width: "auto", maxHeight: "300px"}}
                                     />
                                 </div>
                                 <div className="card-content">
@@ -151,9 +153,9 @@ export default function PublicacaoDetalhe() {
                                                 {publicacao.publicado_em && ` em ${new Date(publicacao.publicado_em).toLocaleString("pt-BR")}`}
                                             </p>
                                             {ehAutor && (
-                                                <div className="d-flex flex-wrap gap-2">
-                                                    <Botao label="Editar" action={() => setEditando(true)} className="br-button primary" />
-                                                    <Botao label="Excluir" action={excluir} className="br-button danger" />
+                                                <div style={{textAlign: "center"}}>
+                                                    <Botao label="Editar" action={() => setEditando(true)} className="br-button primary m-1" />
+                                                    <Botao label="Excluir" action={excluir} className="br-button danger m-1" />
                                                 </div>
                                             )}
                                         </>
@@ -165,11 +167,13 @@ export default function PublicacaoDetalhe() {
                 )}
                 {publicacao &&  
                 <>
-                <Botao
-                    label="Comentar"
-                    action={() => navigate(`/comentarios/${publicacao.id}`)}
-                    className="br-button warning mb-3"
-                    />
+                <div style={{textAlign: "center"}}>
+                    <Botao
+                        label="Comentar"
+                        action={() => navigate(`/comentarios/${publicacao.id}`)}
+                        className="br-button warning m-3"
+                        />
+                </div>
                 </>
                 }
                 {comentarios.length > 0 && (

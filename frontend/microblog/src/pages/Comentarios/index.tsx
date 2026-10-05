@@ -50,10 +50,10 @@ export default function Comentarios() {
     return (
         <>
             <Header />
-            <Botao label="Voltar ás Publicações" action={() => navigate('/publicacoes')} className="br-button secondary mb-3"/>
-            <Botao label="Voltar á Publicação" action={() => navigate(`/publicacoes/${id}`)} className="br-button secondary mb-3"/>
+            <Botao label="Voltar ás Publicações" action={() => navigate('/publicacoes')} className="br-button secondary m-3"/>
+            <Botao label="Voltar á Publicação" action={() => navigate(`/publicacoes/${id}`)} className="br-button primary m-3"/>
             <div className="container mb-4">
-                <h1>Comentários</h1>
+                <h1 style={{textAlign: "center"}} >Comentários</h1>
                 {id ? (
                     <FormComentario publicacao={id} />
                 ) : (

@@ -10,7 +10,10 @@ export default function NovaPublicação(){
     return (
         <>
         <Header/>
-        <Botao label="Voltar às publicações" action={() => navigate('/publicacoes')} className="br-button secondary mb-3"/>
+        <div style={{textAlign: "initial"}}>
+            <Botao label="Voltar às publicações" action={() => navigate('/publicacoes')} className="br-button secondary m-3"/>
+        </div>
+        <h1 style={{textAlign: "center"}} >Adicionar Publicação</h1>
         <FormPublicacao/>
         </>
     )
