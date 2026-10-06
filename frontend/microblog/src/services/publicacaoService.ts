@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 
-class publicacaoService {
+class PublicacaoService {
     async getId(publicacaoId: any) {
         const response = await axiosInstance.get(`/publicacao/${publicacaoId}/`);
         return response.data;
@@ -38,4 +38,4 @@ class publicacaoService {
 
 }
 
-export default new publicacaoService();
+export default new PublicacaoService();

@@ -1,13 +1,13 @@
-import Header from "../../components/Header";
-import Publicacoes from "../../components/Publicacao/detail-publicacoes";
+import Header from "../../components/BrHeader";
+import Publicacoes from "../../components/BrPublicacoes";
 
 export default function Publicacao() {
 
 
     return (
         <>
-        <Header/>
-        <Publicacoes/>
+        <Header />
+        <Publicacoes />
         </>
     )
 }

@@ -1,28 +1,21 @@
 import { useEffect, useState } from "react";
-import publicacaoService from "../../services/publicacaoService";
+import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
-import Botao from "../Botao";
-import Header from "../Header";
-import comentarioService from "../../services/comentarioService";
-import ListaComentarios, { type ComentarioItem } from "../ListaComentarios";
+import Botao from "../BrBotao";
+import Header from "../BrHeader";
+import ComentarioService from "../../services/ComentarioService";
+import { Comentario } from "../../models/Comentario";
+import  BrComentarios from "../BrComentarios";
+import { PublicacaoDetalhe } from "../../models/PublicacaoDetalhe";
 
-interface PublicacaoDetalhe {
-    id: number;
-    titulo: string;
-    descricao: string;
-    imagem?: string | null;
-    publicado_em?: string;
-    autor?: { id?: number | string; nome?: string; username?: string } | null;
-}
-
-export default function PublicacaoDetalhe() {
+export default function Publicacao() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [publicacao, setPublicacao] = useState<PublicacaoDetalhe | null>(null);
-    const [comentarios, setComentarios] = useState<ComentarioItem[]>([]);
+    const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [rascunho, setRascunho] = useState({ titulo: "", descricao: "" });
     const [imagem, setImagem] = useState<File | null>(null);
     const [editando, setEditando] = useState(false);
@@ -33,14 +26,14 @@ export default function PublicacaoDetalhe() {
         if (!id) return;
 
         setCarregando(true);
-        publicacaoService.getId(id)
+        PublicacaoService.getId(id)
         .then((res: PublicacaoDetalhe) => {
             setPublicacao(res);
             setRascunho({ titulo: res.titulo, descricao: res.descricao });
         })
         .catch(() => setErro("Não foi possível carregar esta publicação."))
         .finally(() => setCarregando(false));
-        comentarioService.publicacao(id)
+        ComentarioService.publicacao(id)
         .then((res: any) => {
             setComentarios(res);
             console.log(res);
@@ -66,7 +59,7 @@ export default function PublicacaoDetalhe() {
         if (imagem) dados.append("imagem", imagem);
 
         try {
-            const atualizada = await publicacaoService.update(Number(id), dados);
+            const atualizada = await PublicacaoService.update(Number(id), dados);
             setPublicacao(atualizada);
             setRascunho({ titulo: atualizada.titulo, descricao: atualizada.descricao });
             setImagem(null);
@@ -81,7 +74,7 @@ export default function PublicacaoDetalhe() {
         if (!id || !window.confirm("Deseja realmente excluir esta publicação?")) return;
 
         try {
-            await publicacaoService.destroy(Number(id));
+            await PublicacaoService.destroy(Number(id));
             navigate("/publicacoes");
         } catch {
             setErro("Não foi possível excluir esta publicação.");
@@ -93,7 +86,13 @@ export default function PublicacaoDetalhe() {
             <Header />
             <div className="container">
                 <div style={{textAlign: "initial"}}>
-                    <Botao label="Voltar às publicações" action={() => navigate('/publicacoes')} className="br-button secondary m-3" />
+                    <Botao 
+                        label="Voltar às publicações"
+                        action={() => {
+                            navigate("/publicacoes")
+                        }}
+                        className="br-button secondary m-3"
+                    />
                 </div>
                 <h1 style={{textAlign: "center"}} >Detalhamento</h1>
                 {!carregando && publicacao && (
@@ -139,8 +138,19 @@ export default function PublicacaoDetalhe() {
                                                     onChange={(event) => setImagem(event.target.files?.[0] ?? null)}
                                                 />
                                             </div>
-                                            <button type="submit" className="br-button primary">Salvar</button>
-                                            <button type="button" className="br-button secondary ml-2" onClick={() => setEditando(false)}>
+                                            <button 
+                                                type="submit"
+                                                className="br-button primary"
+                                            >
+                                                Salvar
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="br-button secondary ml-2"
+                                                onClick={() => {
+                                                    setEditando(false)
+                                                }}
+                                                >
                                                 Cancelar
                                             </button>
                                         </form>
@@ -149,13 +159,22 @@ export default function PublicacaoDetalhe() {
                                             <h1>{publicacao.titulo}</h1>
                                             <p>{publicacao.descricao}</p>
                                             <p>
-                                                Publicado por {publicacao.autor?.nome || publicacao.autor?.username || "Usuário"}
+                                                Publicado por {publicacao.autor?.username || publicacao.autor?.nome || "Usuário Comum"}
                                                 {publicacao.publicado_em && ` em ${new Date(publicacao.publicado_em).toLocaleString("pt-BR")}`}
                                             </p>
                                             {ehAutor && (
                                                 <div style={{textAlign: "center"}}>
-                                                    <Botao label="Editar" action={() => setEditando(true)} className="br-button primary m-1" />
-                                                    <Botao label="Excluir" action={excluir} className="br-button danger m-1" />
+                                                    <Botao 
+                                                        label="Editar"
+                                                        action={() => {
+                                                        setEditando(true)}}
+                                                        className="br-button primary m-1"
+                                                    />
+                                                    <Botao 
+                                                        label="Excluir"
+                                                        action={excluir}
+                                                        className="br-button danger m-1"
+                                                    />
                                                 </div>
                                             )}
                                         </>
@@ -170,16 +189,17 @@ export default function PublicacaoDetalhe() {
                 <div style={{textAlign: "center"}}>
                     <Botao
                         label="Comentar"
-                        action={() => navigate(`/comentarios/${publicacao.id}`)}
+                        action={() => {
+                            navigate(`/comentarios/${publicacao.id}`)}}
                         className="br-button warning m-3"
-                        />
+                    />
                 </div>
                 </>
                 }
                 {comentarios.length > 0 && (
                     <>
                         <h2>Comentários</h2>
-                        <ListaComentarios
+                        <BrComentarios
                             comentarios={comentarios}
                             onComentarioAtualizado={atualizarComentario}
                         />

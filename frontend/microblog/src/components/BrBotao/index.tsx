@@ -1,8 +1,6 @@
-import { IBotaoProps } from "./IBotaoProps";
+import { BotaoProps } from "../../models/Botao";
 
-/* Componente de Botão */
-
-export default function Botao(props:IBotaoProps) {
+export default function Botao(props:BotaoProps) {
 
     const { action, label, className, icon } = props;
 

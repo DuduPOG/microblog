@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 
-class usuarioService {
+class UsuarioService {
     async getId(usuarioId: any) {
         const response = await axiosInstance.get(`/usuario/${usuarioId}/`);
         return response.data;
@@ -12,4 +12,4 @@ class usuarioService {
     }
 }
 
-export default new usuarioService();
+export default new UsuarioService();

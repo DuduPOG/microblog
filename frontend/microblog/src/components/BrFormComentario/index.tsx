@@ -1,22 +1,22 @@
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import usuarioService from "../../services/usuarioService";
+import UsuarioService from "../../services/UsuarioService";
 import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
-import comentarioService from "../../services/comentarioService";
-import Botao from "../Botao";
+import ComentarioService from "../../services/ComentarioService";
+import Botao from "../BrBotao";
+import { ComentarioSubmitProps } from "../../models/ComentarioSubmit";
 
 const schema = yup.object().shape({
         mensagem: yup
                 .string()
                 .required("A mensagem é necessária")
-                .max(400, 'A mensagem não pode ter mais de 400 caracteres'),
+                .max(400, "A mensagem não pode ter mais de 400 caracteres")
 });
 
 
-export default function FormComentario(props: IComentarioProps) {
-
+export default function FormComentario(props: ComentarioSubmitProps) {
 
     const { publicacao } = props;
     const { user } = useAuth();
@@ -25,9 +25,13 @@ export default function FormComentario(props: IComentarioProps) {
     useEffect(() => {
         if (id === undefined) return;
 
-        usuarioService.getId(id)
-            .then((usuario) => console.log(usuario))
-            .catch((error) => console.error("Não foi possível buscar o usuário logado.", error));
+        UsuarioService.getId(id)
+            .then((usuario) => {
+                console.log(usuario)
+            })
+            .catch((error) => {
+                console.error("Não foi possível buscar o usuário logado.", error)
+            });
     }, [id]);
 
     const {
@@ -40,13 +44,17 @@ export default function FormComentario(props: IComentarioProps) {
     });
 
     const dataHandler = async (data: { mensagem: string}) => {
-        const bd = await comentarioService.create(String(publicacao), data);
+        const bd = await ComentarioService.create(String(publicacao), data);
+        await props.onComentarioCriado();
         console.log(bd);
+        reset();
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
     };
+
+
 
     return (
         <>
@@ -64,27 +72,48 @@ export default function FormComentario(props: IComentarioProps) {
                                 {...register("mensagem")}
                                 />
                                 <div className="text-base mt-1">
-                                    <span className="limit" aria-live="polite">
+                                    <span
+                                        className="limit"
+                                        aria-live="polite"
+                                    >
                                         Limite máximo de <strong>400</strong> caracteres
                                     </span>
-                                    <span className="current" aria-live="polite" role="status" id="limitmax"></span>
+                                    <span
+                                        className="current"
+                                        aria-live="polite"
+                                        role="status"
+                                        id="limitmax"
+                                    >
+                                    </span>
                                 </div>
                                 {
                                 errors.mensagem !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                                (<span 
+                                    className="feedback danger"
+                                    role="alert"
+                                    id="danger"
+                                >
+                                    <i 
+                                        className="fa fa-times-circle"
+                                        aria-hidden="true"
+                                    >
+                                    </i>
                                     {errors.mensagem?.message}
                                 </span>
                                 )}
                                 
                         </div>
-                        <div style={{textAlign: "end"}} >
+                        <div style={{textAlign: "end"}}>
                             <Botao
                                 label="Limpar"
                                 action={() => {reset()}}
                                 className="br-button secondary m-1"
-                                />
-                            <input type="submit" value="Comentar" className="br-button primary warning"/>
+                            />
+                            <input
+                                type="submit"
+                                value="Comentar"
+                                className="br-button primary warning"
+                            />
                         </div>
                     </form>
                 </div>

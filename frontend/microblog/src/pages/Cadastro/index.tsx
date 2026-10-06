@@ -1,4 +1,4 @@
-import FormCadastro from "../../components/FormCadastro";
+import FormCadastro from "../../components/BrFormCadastro";
 
 export default function Cadastro() {
 

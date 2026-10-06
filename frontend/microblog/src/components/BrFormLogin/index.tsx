@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
-import BotaoCadastro from "../Botao-Cadastro";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./login.css"
 
@@ -12,10 +11,10 @@ import "./login.css"
 const schema = yup.object().shape({
         username: yup.string()
                 .required("Você precisa colocar um username válido para entrar no sistema!"),
-        password: yup.string().required("Você precisa da senha para entrar no sistema!"),
+        password: yup.string().required("Você precisa da senha para entrar no sistema!")
 });
 
-export default function Formulario() : any {
+export default function BrFormLogin() : any {
 
     const navigate = useNavigate();
     const { login } = useAuth();
@@ -24,7 +23,7 @@ export default function Formulario() : any {
     const {
         handleSubmit,
         register,
-        formState: {errors, isSubmitting}
+        formState: {errors}
     } = useForm({
         resolver: yupResolver(schema)
     });
@@ -33,9 +32,9 @@ export default function Formulario() : any {
         setLoginError(null);
         try {
             await login(data);
-            navigate('/publicacoes', { replace: true });
+            navigate("/publicacoes", { replace: true });
         } catch {
-            setLoginError('Não foi possível entrar. Verifique seu usuário e senha.');
+            setLoginError("Não foi possível entrar. Verifique seu usuário e senha.");
         }
     };
 
@@ -46,7 +45,12 @@ export default function Formulario() : any {
         placeholder: string,
     ) => (
         <div className={`br-input large mb-3 ${errors[id] !== undefined ? "danger" : ""}`}>
-            <label htmlFor={id} className="cadastro-sr-only">{label}</label>
+            <label 
+                htmlFor={id}
+                className="cadastro-sr-only"
+            >
+                {label}
+            </label>
             <input
                 id={id}
                 type={type}
@@ -55,8 +59,16 @@ export default function Formulario() : any {
                 />
                 {
                 errors[id] !== undefined &&
-                (<span className="feedback danger" role="alert" id={`${id}-erro`}>
-                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                (<span 
+                    className="feedback danger"
+                    role="alert"
+                    id={`${id}-erro`}
+                >
+                    <i 
+                        className="fa fa-times-circle"
+                        aria-hidden="true"
+                    >
+                    </i>
                     {errors[id]?.message}
                 </span>
                 )}
@@ -68,7 +80,7 @@ export default function Formulario() : any {
         <div className="login-page d-flex justify-content-center align-items-center">
             <section className="login-card d-flex" aria-labelledby="login-titulo">
                 <div className="login-brand d-none d-md-flex justify-content-center align-items-center">
-                    <img src={logoPnp} alt="Ícone PNP" />
+                    <img src={logoPnp} alt="Ícone PNP"/>
                 </div>
                 <div className="login-form d-flex flex-column align-items-center justify-content-center">
                     <div className="login-form-inner">
@@ -81,9 +93,12 @@ export default function Formulario() : any {
                                 type="submit" 
                                 value={"Entrar"} 
                                 className="br-button primary large block login-submit" 
-                                />
+                            />
                         </form>
-                        <Link to='/cadastro' className="cadastro-login-link d-block text-center mt-3">
+                        <Link 
+                            to="/cadastro"
+                            className="cadastro-login-link d-block text-center mt-3"
+                        >
                             Não tenho <strong>conta</strong>
                         </Link>
                     </div>

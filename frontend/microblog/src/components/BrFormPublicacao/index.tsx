@@ -1,30 +1,30 @@
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import usuarioService from "../../services/usuarioService";
+import UsuarioService from "../../services/UsuarioService";
 import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
-import publicacaoService from "../../services/publicacaoService";
+import PublicacaoService from "../../services/PublicacaoService";
 import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
         titulo: yup
                 .string()
                 .required("O Título é necessário")
-                .max(200, 'O Título não pode ter mais de 200 caracteres'),
+                .max(200, "O Título não pode ter mais de 200 caracteres"),
         imagem: yup
                 .mixed()
-                .test('fileType', 'Apenas arquivos de imagem são permitidos', (arq) => {
+                .test("fileType", "Apenas arquivos de imagem são permitidos", (arq) => {
                     if(!arq || !(arq instanceof FileList) || arq.length === 0) {
                         return false;
                     }
                     const file = arq[0];
-                    return file.type.startsWith('image/');
+                    return file.type.startsWith("image/");
                 }),
         descricao: yup
                    .string()
                    .required("A descrição é necessária")
-                   .max(1200, "A descrição não pode ter mais de 1200 caracteres"),
+                   .max(1200, "A descrição não pode ter mais de 1200 caracteres")
 });
 
 
@@ -37,7 +37,7 @@ export default function FormPublicacao() {
     useEffect(() => {
         if (id === undefined) return;
 
-        usuarioService.getId(id)
+        UsuarioService.getId(id)
             .then((usuario) => console.log(usuario))
             .catch((error) => console.error("Não foi possível buscar o usuário logado.", error));
     }, [id]);
@@ -52,9 +52,9 @@ export default function FormPublicacao() {
     });
 
     const dataHandler = async (data: any) => {
-        const bd = await publicacaoService.create(data);
+        const bd = await PublicacaoService.create(data);
         console.log(bd);
-        navigate('/publicacoes');
+        navigate("/publicacoes");
     }
     const errorHandler = (errors: any) => {
         console.log(errors);
@@ -73,18 +73,25 @@ export default function FormPublicacao() {
                                 type="text"
                                 placeholder="Título"
                                 {...register("titulo")}
-                                />
-                                {
-                                errors.titulo !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true">
-                                    </i>
-                                    {errors.titulo?.message}
-                                </span>
-                                )}
+                            />
+                            {
+                            errors.titulo !== undefined && 
+                            (<span 
+                                className="feedback danger"
+                                role="alert"
+                                id="danger"
+                            >
+                                <i 
+                                    className="fa fa-times-circle"
+                                    aria-hidden="true"
+                                >
+                                </i>
+                                {errors.titulo?.message}
+                            </span>
+                            )}
                                 
                         </div>
-                        <div className='br-upload mb-3' data-danger="data-danger">
+                        <div className="br-upload mb-3" data-danger="data-danger">
                             <label className="upload-label" htmlFor="imagem">
                                 <span>Imagem</span>
                             </label>
@@ -98,8 +105,15 @@ export default function FormPublicacao() {
                             <div className="upload-list"></div>
                                 {
                                 errors.imagem !== undefined && 
-                                (<span className="feedback danger mt-1" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true">
+                                (<span 
+                                    className="feedback danger mt-1"
+                                    role="alert"
+                                    id="danger"
+                                >
+                                    <i 
+                                        className="fa fa-times-circle"
+                                        aria-hidden="true"
+                                    >
                                     </i>
                                     {errors.imagem?.message}
                                 </span>
@@ -123,15 +137,34 @@ export default function FormPublicacao() {
                                 </div>
                                 {
                                 errors.descricao !== undefined && 
-                                (<span className="feedback danger" role="alert" id="danger">
-                                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                                (<span 
+                                    className="feedback danger"
+                                    role="alert"
+                                    id="danger"
+                                >
+                                    <i 
+                                        className="fa fa-times-circle"
+                                        aria-hidden="true"
+                                    >
+                                    </i>
                                     {errors.descricao?.message}
                                 </span>
                                 )}
                         </div>
                         <div style={{textAlign: "end"}}>
-                            <input type="button" onClick={() => {reset()}} value="Limpar" className="br-button secondary" />
-                            <input type="submit" value="Publicar" className="br-button primary warning"/>
+                            <input 
+                                type="button"
+                                onClick={() => {
+                                    reset()
+                                }}
+                                value="Limpar"
+                                className="br-button secondary"
+                            />
+                            <input 
+                                type="submit"
+                                value="Publicar"
+                                className="br-button primary warning"
+                            />
                         </div>
                     </form>
                 </div>

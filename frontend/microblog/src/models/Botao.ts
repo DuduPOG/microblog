@@ -1,5 +1,4 @@
-export interface IBotaoProps {
-    /* Função acionada pelo botão quando clicado */
+export interface BotaoProps {
     action: () => void;
     label: string;
     className?: string;

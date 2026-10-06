@@ -1,33 +1,20 @@
 import { useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
-import comentarioService from "../../services/comentarioService";
+import ComentarioService from "../../services/ComentarioService";
+import { BrComentariosProps } from "../../models/BrComentarios";
+import { Comentario } from "../../models/Comentario";
 
-export interface ComentarioItem {
-    id: number;
-    autor?: {
-        id?: number | string;
-        nome?: string;
-        username?: string;
-    } | null;
-    mensagem: string;
-}
-
-interface ListaComentariosProps {
-    comentarios: ComentarioItem[];
-    onComentarioAtualizado: (comentarioId: number, mensagem: string) => void;
-}
-
-export default function ListaComentarios({
+export default function BrComentarios({
     comentarios,
     onComentarioAtualizado,
-}: ListaComentariosProps) {
+}: BrComentariosProps) {
     const { user } = useAuth();
     const [comentarioEditando, setComentarioEditando] = useState<number | null>(null);
     const [mensagemEditada, setMensagemEditada] = useState("");
     const [salvando, setSalvando] = useState(false);
     const [erro, setErro] = useState("");
 
-    function iniciarEdicao(comentario: ComentarioItem) {
+    function iniciarEdicao(comentario: Comentario) {
         setComentarioEditando(comentario.id);
         setMensagemEditada(comentario.mensagem);
         setErro("");
@@ -38,7 +25,7 @@ export default function ListaComentarios({
         setErro("");
 
         try {
-            await comentarioService.update(comentarioId, mensagemEditada);
+            await ComentarioService.update(comentarioId, mensagemEditada);
             onComentarioAtualizado(comentarioId, mensagemEditada);
             setComentarioEditando(null);
         } catch {
@@ -100,14 +87,6 @@ export default function ListaComentarios({
                                     />
                                     <button
                                         type="button"
-                                        className="br-button primary mt-2"
-                                        disabled={salvando || !mensagemEditada.trim()}
-                                        onClick={() => confirmarEdicao(comentario.id)}
-                                    >
-                                        {salvando ? "Salvando..." : "Confirmar"}
-                                    </button>
-                                    <button
-                                        type="button"
                                         className="br-button secondary mt-2 ml-2"
                                         disabled={salvando}
                                         onClick={() => {
@@ -116,6 +95,14 @@ export default function ListaComentarios({
                                         }}
                                     >
                                         Cancelar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="br-button primary mt-2"
+                                        disabled={salvando || !mensagemEditada.trim()}
+                                        onClick={() => confirmarEdicao(comentario.id)}
+                                    >
+                                        {salvando ? "Salvando..." : "Confirmar"}
                                     </button>
                                     {erro && <p role="alert">{erro}</p>}
                                 </>

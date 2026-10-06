@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import logoPnp from "../../assets/logo-pnp.png";
 
-function Header() {
+export default function Header() {
   const { user, signed, logout } = useAuth();
   const navigate = useNavigate();
   const nome = user?.username || user?.nome || "Usuário";
@@ -10,27 +10,25 @@ function Header() {
     return (
     <>
       <header className="br-header compact">
-        <div className="container-sm">
+        <div className="container-sm" style={{textAlign: "initial"}}>
           <img src={logoPnp} alt="Cabeçalho PNP" height={50} />
-          <div>
-          </div>
         </div>
       {signed && user && (
-        <div className="row col-3">
+        <div className="col m-1 col-3" style={{textAlign: "end"}}>
           <span className="br-avatar" title={nome}>
             <span className="content bg-orange-vivid-30 text-pure-0">
               {nome[0].toUpperCase()}
             </span>
           </span>
           <span className="ml-2 text-gray-80 text-weight-regular">
-            Olá, <span className="text-weight-semi-bold">{user.username}</span>
+            Olá, <span className="text-weight-bold">{user.username}</span>
           </span>
           <button
-            className="br-button danger"
+            className="br-button danger ml-2"
             type="button"
             onClick={() => {
               logout();
-              navigate('/login', { replace: true });
+              navigate("/login", { replace: true });
             }}
             aria-label="Sair da sessão"
             title="Sair da sessão"
@@ -46,5 +44,3 @@ function Header() {
     </>
     )
 }
-
-export default Header;

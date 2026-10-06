@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
 import Botao from ".";
-import { IBotaoProps } from "./IBotaoProps";
+import { IBotaoProps } from "../../models/Botao";
 
 const meta = {
     title: "@components/Botao",

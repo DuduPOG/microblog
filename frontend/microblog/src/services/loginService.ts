@@ -1,14 +1,6 @@
+import { AuthTokens } from "../models/AuthTokens";
+import { LoginCredentials } from "../models/LoginCredentials";
 import { axiosInstance } from "./axiosInstance";
-
-export interface LoginCredentials {
-    username: string;
-    password: string;
-}
-
-export interface AuthTokens {
-    access: string;
-    refresh: string;
-}
 
 class LoginService {
     async logar(data: LoginCredentials): Promise<AuthTokens> {

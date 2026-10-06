@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 
-class comentarioService {
+class ComentarioService {
     async getId(comentarioId: any) {
         const response = await axiosInstance.get(`/comentario/${comentarioId}/`);
         return response.data;
@@ -40,4 +40,4 @@ class comentarioService {
 
 }
 
-export default new comentarioService();
+export default new ComentarioService();

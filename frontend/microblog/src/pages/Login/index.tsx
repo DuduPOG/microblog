@@ -1,10 +1,10 @@
-import Formulario from "../../components/Formulario";
+import BrFormLogin from "../../components/BrFormLogin";
 
 export default function Login() {
 
     return (
         <>
-        <Formulario/>
+        <BrFormLogin />
         </>
     );
 }

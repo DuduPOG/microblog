@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import BotaoVoltar from "../../components/Botao-Voltar";
-import FormComentario from "../../components/FormComentario";
-import Header from "../../components/Header";
-import comentarioService from "../../services/comentarioService";
-import Botao from "../../components/Botao";
-import ListaComentarios, { type ComentarioItem } from "../../components/ListaComentarios";
+import FormComentario from "../../components/BrFormComentario";
+import Header from "../../components/BrHeader";
+import ComentarioService from "../../services/ComentarioService";
+import Botao from "../../components/BrBotao";
+import BrComentarios from "../../components/BrComentarios";
+import { Comentario } from "../../models/Comentario";
 
-export default function Comentarios() {
+export default function Comentarios(): JSX.Element {
     const { id } = useParams<{ id: string }>();
-    const [comentarios, setComentarios] = useState<ComentarioItem[]>([]);
+    const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
     const navigate = useNavigate();
@@ -18,6 +18,12 @@ export default function Comentarios() {
         setComentarios((atuais) => atuais.map((comentario) =>
             comentario.id === comentarioId ? { ...comentario, mensagem } : comentario
         ));
+    }
+
+    async function recarregarComentarios() {
+        if (!id) return;
+        const atualizados = await ComentarioService.publicacao(id);
+        setComentarios(atualizados);
     }
 
     useEffect(() => {
@@ -31,7 +37,7 @@ export default function Comentarios() {
         setCarregando(true);
         setErro("");
 
-        comentarioService.publicacao(id)
+        ComentarioService.publicacao(id)
             .then((res: any) => {
                 if (ativo) setComentarios(res);
             })
@@ -50,12 +56,25 @@ export default function Comentarios() {
     return (
         <>
             <Header />
-            <Botao label="Voltar ás Publicações" action={() => navigate('/publicacoes')} className="br-button secondary m-3"/>
-            <Botao label="Voltar á Publicação" action={() => navigate(`/publicacoes/${id}`)} className="br-button primary m-3"/>
+            <Botao 
+                label="Voltar ás Publicações"
+                action={() => {
+                    navigate("/publicacoes")}} 
+                className="br-button secondary m-3"
+            />
+            <Botao 
+                label="Voltar á Publicação"
+                action={() => {
+                    navigate(`/publicacoes/${id}`)}} 
+                className="br-button primary m-3"
+            />
             <div className="container mb-4">
                 <h1 style={{textAlign: "center"}} >Comentários</h1>
                 {id ? (
-                    <FormComentario publicacao={id} />
+                    <FormComentario 
+                        publicacao={id}
+                        onComentarioCriado={recarregarComentarios}    
+                    />
                 ) : (
                     <p>Não foi possível identificar a publicação.</p>
                 )}
@@ -67,7 +86,7 @@ export default function Comentarios() {
                 )}
                 {!carregando && !erro && comentarios.length > 0 && (
                     <>
-                        <ListaComentarios
+                        <BrComentarios
                             comentarios={comentarios}
                             onComentarioAtualizado={atualizarComentario}
                         />

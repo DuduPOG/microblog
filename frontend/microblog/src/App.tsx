@@ -1,11 +1,11 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
-import Cadastro from "./components/FormCadastro";
+import Cadastro from "./components/BrFormCadastro";
 import Publicacoes from "./pages/Publicacoes";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Comentarios from "./pages/Comentarios";
-import PublicacaoDetalhe from "./components/Publicacao/detail-publicacao";
+import PublicacaoDetalhe from "./components/BrPublicacaoDetalhe";
 import NovaPublicação from "./pages/Publicacoes/insert-publicacoes";
 
 function App() {

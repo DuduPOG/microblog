@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import cadastroService from "../../services/cadastroService";
+import CadastroService from "../../services/CadastroService";
 import { Link, useNavigate } from "react-router-dom";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./cadastro.css";
@@ -12,10 +12,10 @@ const schema = yup.object().shape({
                 .required("Username deve ser preenchido"),
         nome: yup.string()
                 .required("Nome deve ser preenchido"),
-        password: yup.string().required('Informe uma senha.'),
+        password: yup.string().required("Informe uma senha."),
         confirmPassword: yup.string()
-            .oneOf([yup.ref('password')], 'As senhas devem ser iguais!')
-            .required('Confirme sua senha.'),
+            .oneOf([yup.ref("password")], "As senhas devem ser iguais!")
+            .required("Confirme sua senha.")
 });
 
 export default function FormCadastro() : any {
@@ -34,8 +34,8 @@ export default function FormCadastro() : any {
     const dataHandler = async ({ confirmPassword, ...data }: any) => {
         setCadastroError(null);
         try {
-            await cadastroService.cadastrar(data);
-            navigate('/login', { replace: true });
+            await CadastroService.cadastrar(data);
+            navigate("/login", { replace: true });
         } catch (error: unknown) {
             setCadastroError("Não foi possível realizar o cadastro. Tente novamente.");
         }
@@ -52,17 +52,30 @@ export default function FormCadastro() : any {
         placeholder: string,
     ) => (
         <div className={`br-input large mb-3 ${errors[id] !== undefined ? "danger" : ""}`}>
-            <label htmlFor={id} className="cadastro-sr-only">{label}</label>
+            <label 
+                htmlFor={id}
+                className="cadastro-sr-only"
+            >
+                {label}
+            </label>
             <input
                 id={id}
                 type={type}
                 placeholder={placeholder}
                 {...register(id)}
-                />
+            />
                 {
                 errors[id] !== undefined &&
-                (<span className="feedback danger" role="alert" id={`${id}-erro`}>
-                    <i className="fas fa-times-circle" aria-hidden="true"></i>
+                (<span 
+                    className="feedback danger"
+                    role="alert"
+                    id={`${id}-erro`}
+                >
+                    <i 
+                        className="fa fa-times-circle"
+                        aria-hidden="true"
+                    >
+                    </i>
                     {errors[id]?.message}
                 </span>
                 )}
@@ -73,7 +86,7 @@ export default function FormCadastro() : any {
         <div className="cadastro-page d-flex justify-content-center align-items-center">
             <section className="cadastro-card d-flex" aria-labelledby="cadastro-titulo">
                 <div className="cadastro-brand d-none d-md-flex justify-content-center align-items-center">
-                    <img src={logoPnp} alt="Ícone PNP" />
+                    <img src={logoPnp} alt="Ícone PNP"/>
                 </div>
                 <div className="cadastro-form d-flex flex-column align-items-center justify-content-center">
                     <div className="cadastro-form-inner">
@@ -84,9 +97,17 @@ export default function FormCadastro() : any {
                             {campo("nome", "Nome", "text", "Nome")}
                             {campo("password", "Senha", "password", "Senha")}
                             {campo("confirmPassword", "Confirme a senha", "password", "Confirme a senha")}
-                            <input type="submit" value={isSubmitting ? "Criando..." : "Criar"} className="br-button primary large block cadastro-submit" disabled={isSubmitting}/>
+                            <input 
+                                type="submit" 
+                                value={isSubmitting ? "Criando..." : "Criar"}
+                                className="br-button primary large block cadastro-submit"
+                                disabled={isSubmitting}
+                            />
                         </form>
-                        <Link to="/login" className="cadastro-login-link d-block text-center mt-3">
+                        <Link 
+                            to="/login"
+                            className="cadastro-login-link d-block text-center mt-3"
+                        >
                             Já tenho <strong>conta</strong>
                         </Link>
                     </div>
