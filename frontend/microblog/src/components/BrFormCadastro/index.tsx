@@ -90,7 +90,7 @@ export default function FormCadastro() : any {
                 </div>
                 <div className="cadastro-form d-flex flex-column align-items-center justify-content-center">
                     <div className="cadastro-form-inner">
-                        <h1 id="cadastro-titulo" className="cadastro-titulo">Cadastre-se</h1>
+                        <h1 id="cadastro-titulo" className="cadastro-titulo" style={{textAlign: "center"}}>Cadastre-se</h1>
                         <form onSubmit={handleSubmit(dataHandler, errorHandler)}>
                             {cadastroError && <p className="feedback danger" role="alert">{cadastroError}</p>}
                             {campo("username", "Username", "text", "Username")}

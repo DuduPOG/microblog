@@ -84,7 +84,7 @@ export default function BrFormLogin() : any {
                 </div>
                 <div className="login-form d-flex flex-column align-items-center justify-content-center">
                     <div className="login-form-inner">
-                        <h1 id="login-titulo" className="login-titulo">Login</h1>
+                        <h1 id="login-titulo" className="login-titulo" style={{textAlign: "center"}}>Login</h1>
                         <form onSubmit={handleSubmit(dataHandler)}>
                             {loginError && <p className="feedback danger" role="alert">{loginError}</p>}
                             {campo("username", "username", "text", "Username")}
