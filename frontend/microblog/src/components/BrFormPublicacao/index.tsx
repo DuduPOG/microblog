@@ -14,13 +14,13 @@ const schema : yup.ObjectSchema<FormPublicacaoSubmit>= yup.object().shape({
                 .required("O Título é necessário")
                 .max(200, "O Título não pode ter mais de 200 caracteres"),
         imagem: yup
-                .mixed()
+                .mixed<FileList>()
                 .test("fileType", "Apenas arquivos de imagem são permitidos", (arq) => {
-                    if(!arq || !(arq instanceof FileList) || arq.length === 0) {
-                        return false;
+                    if(arq === null || arq?.length === 0) {
+                        return true;
                     }
-                    const file = arq[0];
-                    return file.type.startsWith("image/");
+                    const file = arq?.item(0);
+                    return file !== null && file?.type.startsWith("image/");
                 }),
         descricao: yup
                    .string()

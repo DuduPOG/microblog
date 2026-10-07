@@ -1,8 +1,8 @@
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 
-export default function ProtectedRoute({ children }: { children: ReactNode }): ReactElement {
+export default function ProtectedRoute({ children }: { children: ReactNode }) : JSX.Element {
   const { signed, loading } = useAuth();
 
   if (loading) {

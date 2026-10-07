@@ -1,5 +1,5 @@
 export interface FormPublicacaoSubmit{
     titulo: string;
-    imagem: any | null;
+    imagem: FileList | null | undefined;
     descricao: string;
 }
