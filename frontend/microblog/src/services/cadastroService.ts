@@ -1,9 +1,9 @@
-import { FormCadastroSubmit } from "../models/Cadastro";
+import { CadastroSubmit } from "../models/Cadastro";
 import { axiosInstance } from "./axiosInstance";
 
 class CadastroService {
-    async cadastrar(data: FormCadastroSubmit) : Promise<any>{
-        const response = await axiosInstance.post("cadastrar/", data);
+    async cadastrar(data: CadastroSubmit) : Promise<any> {
+        const response = await axiosInstance.post<CadastroSubmit>("cadastrar/", data);
         return response.data;
     }
 }

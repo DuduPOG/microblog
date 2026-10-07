@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import { AuthTokens } from "../models/AuthTokens";
-import { LoginCredentials } from "../models/LoginCredentials";
+import { AuthTokens } from "../models/Auth";
+import { LoginCredentials } from "../models/Login";
 import { axiosInstance } from "./axiosInstance";
 
 class LoginService {

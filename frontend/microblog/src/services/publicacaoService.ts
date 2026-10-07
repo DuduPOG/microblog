@@ -1,18 +1,18 @@
-import { FormPublicacaoSubmit } from "../models/Publicacao";
+import { PublicacaoDetalhe, PublicacaoSubmit } from "../models/Publicacao";
 import { axiosInstance } from "./axiosInstance";
 
 class PublicacaoService {
-    async getId(publicacaoId: number) : Promise<void> {
-        const response = await axiosInstance.get(`/publicacao/${publicacaoId}/`);
+    async getId(publicacaoId: number) : Promise<PublicacaoDetalhe> {
+        const response = await axiosInstance.get<PublicacaoDetalhe>(`/publicacao/${publicacaoId}/`);
         return response.data;
     }
 
-    async getAll() : Promise<void> {
-        const response = await axiosInstance.get(`/publicacao/`);
+    async getAll() : Promise<PublicacaoDetalhe[]> {
+        const response = await axiosInstance.get<{ results: PublicacaoDetalhe[] }>(`/publicacao/`);
         return response.data.results;
     }
 
-    async create(data: FormPublicacaoSubmit) : Promise<void> {
+    async create(data: PublicacaoSubmit) : Promise<void> {
         const formData : FormData = new FormData();
         formData.append("titulo", data.titulo);
         formData.append("descricao", data.descricao);
@@ -27,7 +27,7 @@ class PublicacaoService {
 
     }
     
-    async update(publicacaoId: number, data: FormData) : Promise<void> {
+    async update(publicacaoId: number, data: FormData) : Promise<PublicacaoDetalhe> {
         const response = await axiosInstance.put(`/publicacao/${publicacaoId}/`, data);
         return response.data;
     }

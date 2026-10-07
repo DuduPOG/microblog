@@ -1,20 +1,21 @@
 import { AxiosResponse } from "axios";
-import { ComentarioSubmit } from "../models/Comentario";
+import { Comentario, ComentarioSubmit } from "../models/Comentario";
 import { axiosInstance } from "./axiosInstance";
+import { PublicacaoDetalhe } from "../models/Publicacao";
 
 class ComentarioService {
-    async getId(comentarioId: number) : Promise<any> {
-        const response = await axiosInstance.get(`/comentario/${comentarioId}/`);
+    async getId(comentarioId: number) : Promise<Comentario> {
+        const response = await axiosInstance.get<Comentario>(`/comentario/${comentarioId}/`);
         return response.data;
     }
 
-    async publicacao(publicacaoId: number) : Promise<any> {
-        const response = await axiosInstance.get(`/publicacao/${publicacaoId}/comentarios/`);
+    async publicacao(publicacaoId: number) : Promise<PublicacaoDetalhe[]> {
+        const response = await axiosInstance.get<{ results: PublicacaoDetalhe[] }>(`/publicacao/${publicacaoId}/comentarios/`);
         return response.data.results;
     }
 
-    async getAll() : Promise<any> {
-        const response = await axiosInstance.get(`/comentario/`);
+    async getAll() : Promise<Comentario[]> {
+        const response = await axiosInstance.get<{ results: Comentario[] }>(`/comentario/`);
         return response.data.results;
     }
 
@@ -28,15 +29,15 @@ class ComentarioService {
 
     }
     
-    async update(comentarioId: number, mensagem: string) : Promise<any> {
-        const response = await axiosInstance.patch(`/comentario/${comentarioId}/`, mensagem);
+    async update(comentarioId: number, mensagem: string) : Promise<Comentario> {
+        const response = await axiosInstance.patch<Comentario>(`/comentario/${comentarioId}/`, mensagem);
         return response.data;
     }
 
-    async destroy(comentarioId: any) : Promise<any> {
-        const data : Promise<any> = this.getId(comentarioId);
+    async destroy(comentarioId: number) : Promise<any> {
+        const data : Promise<Comentario> = this.getId(comentarioId);
         if (data === undefined) return;
-        const response : AxiosResponse<any, any, {}, any>= await axiosInstance.delete(`/comentario/`, comentarioId);
+        const response : AxiosResponse<any, any, {}, any> = await axiosInstance.delete(`/comentario/${comentarioId}`);
         return response.data;
     }
 
