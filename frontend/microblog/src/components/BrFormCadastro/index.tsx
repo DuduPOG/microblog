@@ -6,8 +6,9 @@ import CadastroService from "../../services/CadastroService";
 import { Link, useNavigate } from "react-router-dom";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./cadastro.css";
+import { FormCadastroSubmit } from "../../models/FormCadastro";
 
-const schema = yup.object().shape({
+const schema: yup.ObjectSchema<FormCadastroSubmit> = yup.object().shape({
         username: yup.string()
                 .required("Username deve ser preenchido"),
         nome: yup.string()
@@ -18,7 +19,7 @@ const schema = yup.object().shape({
             .required("Confirme sua senha.")
 });
 
-export default function FormCadastro() : any {
+export default function FormCadastro() : JSX.Element {
 
     const navigate = useNavigate();
     const [cadastroError, setCadastroError] = useState<string | null>(null);

@@ -1,6 +1,6 @@
 import { BotaoProps } from "../../models/Botao";
 
-export default function Botao(props:BotaoProps) {
+export default function Botao(props:BotaoProps) : JSX.Element {
 
     const { action, label, className, icon } = props;
 
@@ -10,8 +10,8 @@ export default function Botao(props:BotaoProps) {
                 className={className}
                 onClick={action}
             >
-                {label}
             <i className={`${icon}`}></i>
+                {label}
             </button>
         </>
     )

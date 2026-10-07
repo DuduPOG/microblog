@@ -6,9 +6,9 @@ import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import ComentarioService from "../../services/ComentarioService";
 import Botao from "../BrBotao";
-import { ComentarioSubmitProps } from "../../models/ComentarioSubmit";
+import { ComentarioSubmitProps, ComentarioSubmit } from "../../models/Comentario";
 
-const schema = yup.object().shape({
+const schema : yup.ObjectSchema<ComentarioSubmit> = yup.object().shape({
         mensagem: yup
                 .string()
                 .required("A mensagem é necessária")
@@ -16,7 +16,7 @@ const schema = yup.object().shape({
 });
 
 
-export default function FormComentario(props: ComentarioSubmitProps) {
+export default function FormComentario(props: ComentarioSubmitProps) : JSX.Element {
 
     const { publicacao } = props;
     const { user } = useAuth();
@@ -43,13 +43,13 @@ export default function FormComentario(props: ComentarioSubmitProps) {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = async (data: { mensagem: string}) => {
+    const dataHandler : any = async (data: ComentarioSubmit) => {
         const bd = await ComentarioService.create(String(publicacao), data);
         await props.onComentarioCriado();
         console.log(bd);
         reset();
     }
-    const errorHandler = (errors: any) => {
+    const errorHandler : any = (errors: any) => {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
     };

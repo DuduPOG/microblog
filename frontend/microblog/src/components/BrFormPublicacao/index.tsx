@@ -6,8 +6,9 @@ import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import PublicacaoService from "../../services/PublicacaoService";
 import { useNavigate } from "react-router-dom";
+import { FormPublicacaoSubmit } from "../../models/FormPublicacao";
 
-const schema = yup.object().shape({
+const schema : yup.ObjectSchema<FormPublicacaoSubmit>= yup.object().shape({
         titulo: yup
                 .string()
                 .required("O Título é necessário")
@@ -28,7 +29,7 @@ const schema = yup.object().shape({
 });
 
 
-export default function FormPublicacao() {
+export default function FormPublicacao() : JSX.Element {
 
     const { user } = useAuth();
     const id = user?.id;

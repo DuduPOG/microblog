@@ -7,20 +7,20 @@ import { Comentario } from "../../models/Comentario";
 export default function BrComentarios({
     comentarios,
     onComentarioAtualizado,
-}: BrComentariosProps) {
+}: BrComentariosProps) : JSX.Element {
     const { user } = useAuth();
     const [comentarioEditando, setComentarioEditando] = useState<number | null>(null);
     const [mensagemEditada, setMensagemEditada] = useState("");
     const [salvando, setSalvando] = useState(false);
     const [erro, setErro] = useState("");
 
-    function iniciarEdicao(comentario: Comentario) {
+    function iniciarEdicao(comentario: Comentario) : void {
         setComentarioEditando(comentario.id);
         setMensagemEditada(comentario.mensagem);
         setErro("");
     }
 
-    async function confirmarEdicao(comentarioId: number) {
+    async function confirmarEdicao(comentarioId: number) : Promise<void> {
         setSalvando(true);
         setErro("");
 

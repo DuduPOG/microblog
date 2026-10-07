@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import Botao from "../BrBotao";
 import Header from "../BrHeader";
@@ -10,9 +10,9 @@ import { Comentario } from "../../models/Comentario";
 import  BrComentarios from "../BrComentarios";
 import { PublicacaoDetalhe } from "../../models/PublicacaoDetalhe";
 
-export default function Publicacao() {
+export default function Publicacao() : JSX.Element {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
+    const navigate : NavigateFunction = useNavigate();
     const { user } = useAuth();
     const [publicacao, setPublicacao] = useState<PublicacaoDetalhe | null>(null);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
@@ -40,20 +40,20 @@ export default function Publicacao() {
         });
     }, [id]);
 
-    const ehAutor = publicacao?.autor?.id !== undefined &&
+    const ehAutor : boolean = publicacao?.autor?.id !== undefined &&
         Number(publicacao.autor.id) === Number(user?.id);
 
-    function atualizarComentario(comentarioId: number, mensagem: string) {
+    function atualizarComentario(comentarioId: number, mensagem: string) : void {
         setComentarios((atuais) => atuais.map((comentario) =>
             comentario.id === comentarioId ? { ...comentario, mensagem } : comentario
         ));
     }
 
-    async function salvarEdicao(event: React.FormEvent<HTMLFormElement>) {
+    async function salvarEdicao(event: React.FormEvent<HTMLFormElement>) : Promise<void> {
         event.preventDefault();
         if (!id) return;
 
-        const dados = new FormData();
+        const dados : FormData = new FormData();
         dados.append("titulo", rascunho.titulo);
         dados.append("descricao", rascunho.descricao);
         if (imagem) dados.append("imagem", imagem);
@@ -70,7 +70,7 @@ export default function Publicacao() {
         }
     }
 
-    async function excluir() {
+    async function excluir() : Promise<void> {
         if (!id || !window.confirm("Deseja realmente excluir esta publicação?")) return;
 
         try {

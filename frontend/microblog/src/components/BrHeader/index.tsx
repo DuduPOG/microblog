@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import logoPnp from "../../assets/logo-pnp.png";
 
-export default function Header() {
+export default function Header() : JSX.Element {
   const { user, signed, logout } = useAuth();
-  const navigate = useNavigate();
+  const navigate : NavigateFunction = useNavigate();
   const nome = user?.username || user?.nome || "Usuário";
 
     return (

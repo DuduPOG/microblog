@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
 import Botao from "../BrBotao";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { PublicacaoDetalhe } from "../../models/PublicacaoDetalhe";
 
-export default function Publicacoes(){
+export default function Publicacoes() : JSX.Element {
     
     const [publicacoes, setPublicacoes] = useState<PublicacaoDetalhe[]>([]);
 
-    const navigate = useNavigate();
+    const navigate : NavigateFunction = useNavigate();
     
-    function handleData() {
+    function handleData() : void {
         PublicacaoService.getAll()
         .then((res: PublicacaoDetalhe[]) => {
             console.log(res);
@@ -22,7 +22,7 @@ export default function Publicacoes(){
         });
     }
 
-    function detalhar(publicacaoId: number) {
+    function detalhar(publicacaoId: number) : void {
         navigate(`/publicacoes/${publicacaoId}/`);
     }
 

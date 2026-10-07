@@ -7,3 +7,12 @@ export interface Comentario {
     } | null;
     mensagem: string;
 }
+
+export interface ComentarioSubmitProps {
+    publicacao: string;
+    onComentarioCriado: () => void | Promise<void>
+}
+
+export interface ComentarioSubmit {
+    mensagem: string;
+}
