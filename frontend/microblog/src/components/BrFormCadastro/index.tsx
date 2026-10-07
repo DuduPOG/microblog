@@ -6,9 +6,9 @@ import CadastroService from "../../services/CadastroService";
 import { Link, useNavigate } from "react-router-dom";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./cadastro.css";
-import { FormCadastroSubmit } from "../../models/FormCadastro";
+import { CadastroSubmit } from "../../models/Cadastro";
 
-const schema: yup.ObjectSchema<FormCadastroSubmit> = yup.object().shape({
+const schema: yup.ObjectSchema<CadastroSubmit> = yup.object().shape({
         username: yup.string()
                 .required("Username deve ser preenchido"),
         nome: yup.string()

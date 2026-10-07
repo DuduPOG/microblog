@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode, Context } from 'react';
 import LoginService from '../services/LoginService';
-import { AuthContextValue } from '../models/AuthContextValue';
+import { AuthContextValue } from '../models/Auth';
 import { AuthUser } from '../models/AuthUser';
 import { LoginCredentials } from '../models/LoginCredentials';
 

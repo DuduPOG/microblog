@@ -1,4 +1,4 @@
-import { FormCadastroSubmit } from "../models/FormCadastro";
+import { FormCadastroSubmit } from "../models/Cadastro";
 import { axiosInstance } from "./axiosInstance";
 
 class CadastroService {

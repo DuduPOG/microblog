@@ -8,12 +8,12 @@ import Header from "../BrHeader";
 import ComentarioService from "../../services/ComentarioService";
 import { Comentario } from "../../models/Comentario";
 import  BrComentarios from "../BrComentarios";
-import { PublicacaoDetalhe } from "../../models/PublicacaoDetalhe";
+import { PublicacaoDetalhe } from "../../models/Publicacao";
 
 export default function Publicacao() : JSX.Element {
-    const { id } = useParams<{ id: string }>();
     const navigate : NavigateFunction = useNavigate();
     const { user } = useAuth();
+    const id = user?.id;
     const [publicacao, setPublicacao] = useState<PublicacaoDetalhe | null>(null);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [rascunho, setRascunho] = useState({ titulo: "", descricao: "" });
@@ -27,7 +27,7 @@ export default function Publicacao() : JSX.Element {
 
         setCarregando(true);
         PublicacaoService.getId(id)
-        .then((res: PublicacaoDetalhe) => {
+        .then((res: PublicacaoDetalhe) : void => {
             setPublicacao(res);
             setRascunho({ titulo: res.titulo, descricao: res.descricao });
         })
@@ -59,9 +59,12 @@ export default function Publicacao() : JSX.Element {
         if (imagem) dados.append("imagem", imagem);
 
         try {
-            const atualizada = await PublicacaoService.update(Number(id), dados);
+            const atualizada : void = await PublicacaoService.update(Number(id), dados);
             setPublicacao(atualizada);
-            setRascunho({ titulo: atualizada.titulo, descricao: atualizada.descricao });
+            setRascunho({
+                titulo: atualizada.titulo,
+                descricao: atualizada.descricao
+            });
             setImagem(null);
             setEditando(false);
             setErro("");

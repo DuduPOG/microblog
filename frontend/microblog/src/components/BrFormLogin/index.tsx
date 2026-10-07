@@ -6,10 +6,10 @@ import { useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./login.css"
-import { FormLoginSubmit } from "../../models/FormLogin";
+import { LoginSubmit } from "../../models/Login";
 
 
-const schema : yup.ObjectSchema<FormLoginSubmit>= yup.object().shape({
+const schema : yup.ObjectSchema<LoginSubmit>= yup.object().shape({
         username: yup.string()
                 .required("Você precisa colocar um username válido para entrar no sistema!"),
         password: yup.string().required("Você precisa da senha para entrar no sistema!")
@@ -29,7 +29,7 @@ export default function BrFormLogin() : JSX.Element {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler : any = async (data: FormLoginSubmit) => {
+    const dataHandler : any = async (data: LoginSubmit) => {
         setLoginError(null);
         try {
             await login(data);

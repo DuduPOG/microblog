@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import ComentarioService from "../../services/ComentarioService";
-import { BrComentariosProps } from "../../models/BrComentarios";
+import { ComentarioProps } from "../../models/Comentario";
 import { Comentario } from "../../models/Comentario";
 
 export default function BrComentarios({
-    comentarios,
-    onComentarioAtualizado,
-}: BrComentariosProps) : JSX.Element {
+                            comentarios,
+                            onComentarioAtualizado,
+                        }: ComentarioProps) : JSX.Element {
     const { user } = useAuth();
     const [comentarioEditando, setComentarioEditando] = useState<number | null>(null);
     const [mensagemEditada, setMensagemEditada] = useState("");

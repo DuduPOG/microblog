@@ -1,4 +1,4 @@
-import { FormPublicacaoSubmit } from "../models/FormPublicacao";
+import { FormPublicacaoSubmit } from "../models/Publicacao";
 import { axiosInstance } from "./axiosInstance";
 
 class PublicacaoService {

@@ -8,33 +8,67 @@ import Comentarios from "./pages/Comentarios";
 import PublicacaoDetalhe from "./components/BrPublicacaoDetalhe";
 import NovaPublicação from "./pages/Publicacoes/insert-publicacoes";
 
-function App() {
+export default function App() : JSX.Element {
 	return (
 		<>
       <BrowserRouter>
+      {
+      // -----------------------------
+      // Rotas Protegidas
+      // -----------------------------
+      }
         <Routes>
-          <Route path="/publicacoes" element={
+          <Route 
+            path="/publicacoes"
+            element={
             <ProtectedRoute>
               <Publicacoes />
             </ProtectedRoute>
-          } />
-          <Route path="/nova-publicacao" element={
+            }
+          />
+          <Route
+            path="/nova-publicacao"
+            element={
             <ProtectedRoute>
               <NovaPublicação />
             </ProtectedRoute>
-          } />
-          <Route path="/publicacoes/:id" element={
+            }
+          />
+          <Route
+            path="/publicacoes/:id"
+            element={
             <ProtectedRoute>
               <PublicacaoDetalhe />
             </ProtectedRoute>
-          } />
-          <Route path="/comentarios/:id" element={<Comentarios />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro" element={<Cadastro />} />
+            }
+          />
+          <Route
+            path="/comentarios/:id"
+            element={
+            <ProtectedRoute>
+              <Comentarios />
+            </ProtectedRoute>
+            }
+          />
+                {
+      // -----------------------------
+      // Rotas Desprotegidas
+      // -----------------------------
+      }
+          <Route
+            path="/login"
+            element={
+              <Login />
+            }
+          />
+          <Route
+            path="/cadastro"
+            element={
+              <Cadastro />
+            }
+          />
         </Routes>
       </BrowserRouter>
 		</>
 	);
 }
-
-export default App;

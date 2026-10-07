@@ -20,7 +20,7 @@ export default function FormComentario(props: ComentarioSubmitProps) : JSX.Eleme
 
     const { publicacao } = props;
     const { user } = useAuth();
-    const id = user?.id;
+    const id : number | undefined = user?.id;
     
     useEffect(() => {
         if (id === undefined) return;

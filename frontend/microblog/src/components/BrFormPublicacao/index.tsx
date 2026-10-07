@@ -6,9 +6,9 @@ import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import PublicacaoService from "../../services/PublicacaoService";
 import { useNavigate } from "react-router-dom";
-import { FormPublicacaoSubmit } from "../../models/FormPublicacao";
+import { PublicacaoSubmit } from "../../models/Publicacao";
 
-const schema : yup.ObjectSchema<FormPublicacaoSubmit>= yup.object().shape({
+const schema : yup.ObjectSchema<PublicacaoSubmit>= yup.object().shape({
         titulo: yup
                 .string()
                 .required("O Título é necessário")

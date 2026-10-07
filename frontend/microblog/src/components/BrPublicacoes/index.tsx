@@ -3,7 +3,7 @@ import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
 import Botao from "../BrBotao";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { PublicacaoDetalhe } from "../../models/PublicacaoDetalhe";
+import { PublicacaoDetalhe } from "../../models/Publicacao";
 
 export default function Publicacoes() : JSX.Element {
     
@@ -13,11 +13,11 @@ export default function Publicacoes() : JSX.Element {
     
     function handleData() : void {
         PublicacaoService.getAll()
-        .then((res: PublicacaoDetalhe[]) => {
+        .then((res: PublicacaoDetalhe[]) : void => {
             console.log(res);
             setPublicacoes(res);
         })
-        .catch((error: any) => {
+        .catch((error: any) : any => {
             console.error("Não foi possível puxar a publicação", error)
         });
     }
