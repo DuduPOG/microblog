@@ -1,8 +1,8 @@
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosResponse, type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 const API_BASE_URL = "http://127.0.0.1:8000/";
 
-export const axiosInstance = axios.create({
+export const axiosInstance : AxiosInstance= axios.create({
     baseURL: API_BASE_URL,
 });
 
@@ -11,7 +11,7 @@ interface RetriableRequest extends InternalAxiosRequestConfig {
 }
 
 axiosInstance.interceptors.request.use((config) => {
-    const access = localStorage.getItem("access");
+    const access : string | null = localStorage.getItem("access");
     if (access) {
         config.headers.set("Authorization", `Bearer ${access}`);
     }
@@ -19,17 +19,17 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 axiosInstance.interceptors.response.use(
-    (response) => response,
-    async (error: AxiosError) => {
-        const request = error.config as RetriableRequest | undefined;
-        const isAuthRequest = request?.url?.includes("/login/")
+    (response: AxiosResponse<any, any, {}, any>) : AxiosResponse<any, any, {}, any> => response,
+    async (error: AxiosError) : Promise<AxiosResponse<any, any, {}, any>> => {
+        const request : RetriableRequest | undefined = error.config as RetriableRequest | undefined;
+        const isAuthRequest : boolean | undefined = request?.url?.includes("/login/")
             || request?.url?.includes("/token/refresh/");
 
         if (error.response?.status !== 401 || !request || request._retry || isAuthRequest) {
             return Promise.reject(error);
         }
 
-        const refresh = localStorage.getItem("refresh");
+        const refresh : string | null = localStorage.getItem("refresh");
         if (!refresh) {
             localStorage.removeItem("access");
             window.dispatchEvent(new Event("auth:logout"));
@@ -38,14 +38,17 @@ axiosInstance.interceptors.response.use(
 
         request._retry = true;
         try {
-            const response = await axios.post<{ access: string }>(
+            const response :  AxiosResponse<{ 
+                                    access: string;
+                            }, any, {}, any> 
+            = await axios.post<{ access: string }>(
                 `${API_BASE_URL}token/refresh/`,
                 { refresh },
             );
             localStorage.setItem("access", response.data.access);
             request.headers.set("Authorization", `Bearer ${response.data.access}`);
             return axiosInstance(request);
-        } catch (refreshError) {
+        } catch (refreshError: any) {
             localStorage.removeItem("access");
             localStorage.removeItem("refresh");
             window.dispatchEvent(new Event("auth:logout"));
