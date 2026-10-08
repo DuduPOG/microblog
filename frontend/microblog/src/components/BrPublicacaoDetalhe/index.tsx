@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import Botao from "../BrBotao";
 import Header from "../BrHeader";
@@ -31,8 +31,9 @@ import { PublicacaoDetalhe } from "../../models/Publicacao";
 
 export default function Publicacao() : JSX.Element {
     const navigate : NavigateFunction = useNavigate();
+    const { id } = useParams<{ id: string }>();
+    const publicacaoId = Number(id);
     const { user } = useAuth();
-    const id : number | undefined = user?.id;
     const [publicacao, setPublicacao] = useState<PublicacaoDetalhe | null>(null);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [rascunho, setRascunho] = useState({ titulo: "", descricao: "" });
@@ -42,27 +43,47 @@ export default function Publicacao() : JSX.Element {
     const [erro, setErro] = useState("");
 
     useEffect(() => {
-        if (!id) return;
+        let ativo = true;
+        if (!id || !Number(publicacaoId) || publicacaoId <= 0) {
+            setPublicacao(null);
+            setComentarios([]);
+            setErro("Identificador de publicação inválido.");
+            setCarregando(false);
+            return () => {
+                ativo = false;
+            };
+        }
 
         setCarregando(true);
-        PublicacaoService.getId(id)
+        setErro("");
+        setPublicacao(null);
+        setComentarios([]);
+
+        PublicacaoService.getId(publicacaoId)
         .then((res: PublicacaoDetalhe) : void => {
+            if (!ativo) return;
             setPublicacao(res);
             setRascunho({ titulo: res.titulo, descricao: res.descricao });
         })
         .catch(() => {
-            setErro("Não foi possível carregar esta publicação.")
+            if (ativo) setErro("Não foi possível carregar esta publicação.");
         })
         .finally(() => {
-            setCarregando(false)
+            if (ativo) setCarregando(false);
         });
 
-        ComentarioService.publicacao(id)
-        .then((res: any) => {
-            setComentarios(res);
-            console.log(res);
+        ComentarioService.publicacao(publicacaoId)
+        .then((res: Comentario[]) => {
+            if (ativo) setComentarios(res);
+        })
+        .catch(() => {
+            if (ativo) setErro("Não foi possível carregar os comentários.");
         });
-    }, [id]);
+
+        return () => {
+            ativo = false;
+        };
+    }, [id, publicacaoId]);
 
     const ehAutor = publicacao?.autor?.id !== undefined
         && Number(publicacao.autor.id) === Number(user?.id);
@@ -75,7 +96,7 @@ export default function Publicacao() : JSX.Element {
 
     const salvarEdicao = useCallback(async (event: React.FormEvent<HTMLFormElement>) : Promise<void> => {
         event.preventDefault();
-        if (!id) return;
+        if (!Number(publicacaoId) || publicacaoId <= 0) return;
 
         const dados : FormData = new FormData();
         dados.append("titulo", rascunho.titulo);
@@ -83,7 +104,7 @@ export default function Publicacao() : JSX.Element {
         if (imagem) dados.append("imagem", imagem);
 
         try {
-            const atualizada : PublicacaoDetalhe = await PublicacaoService.update(Number(id), dados);
+            const atualizada : PublicacaoDetalhe = await PublicacaoService.update(publicacaoId, dados);
             setPublicacao(atualizada);
             setRascunho({
                 titulo: atualizada.titulo,
@@ -95,18 +116,20 @@ export default function Publicacao() : JSX.Element {
         } catch {
             setErro("Não foi possível salvar as alterações.");
         }
-    }, [id, imagem, rascunho]);
+    }, [publicacaoId, imagem, rascunho]);
 
     const excluir = useCallback(async () : Promise<void> => {
-        if (!id || !window.confirm("Deseja realmente excluir esta publicação?")) return;
+        if (!Number(publicacaoId)
+            || publicacaoId <= 0
+            || !window.confirm("Deseja realmente excluir esta publicação?")) return;
 
         try {
-            await PublicacaoService.destroy(Number(id));
+            await PublicacaoService.destroy(publicacaoId);
             navigate("/publicacoes");
         } catch {
             setErro("Não foi possível excluir esta publicação.");
         }
-    }, [id, navigate]);
+    }, [publicacaoId, navigate]);
 
     const voltarPublicacoes = useCallback(() : void => {
         navigate("/publicacoes");
@@ -132,6 +155,7 @@ export default function Publicacao() : JSX.Element {
                     />
                 </div>
                 <h1 style={{textAlign: "center"}} >Detalhamento</h1>
+                {erro && <p role="alert">{erro}</p>}
                 {!carregando && publicacao && (
                     <div className="d-flex justify-content-center">
                         <article className="col-12 col-lg-9">

@@ -50,7 +50,7 @@ const ComentarioItem = memo(function ComentarioItem({
                 <div className="d-flex">
                     <span className="br-avatar" title={nomeAutor}>
                         <span className="content bg-blue-vivid-50 text-pure-0">
-                            {nomeAutor.charAt(0).toUpperCase()}
+                            {nomeAutor[0].toUpperCase()}
                         </span>
                     </span>
                     <div className="ml-3">

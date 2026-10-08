@@ -77,7 +77,10 @@ function Publicacoes() : JSX.Element {
                                             <div style={{textAlign: "end"}}>
                                                 <Botao 
                                                     label=""
-                                                    action={() => detalhar(publicacao.id)}
+                                                    action={() => {
+                                                        detalhar(publicacao.id);
+                                                    }
+                                                    }
                                                     className="br-button primary circle mt-3 mr-3"
                                                     icon="fa fa-ellipsis-v"
                                                 />

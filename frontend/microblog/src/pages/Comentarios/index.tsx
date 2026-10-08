@@ -8,7 +8,8 @@ import BrComentarios from "../../components/BrComentarios";
 import { Comentario } from "../../models/Comentario";
 
 export default function Comentarios(): JSX.Element {
-    const { id } = useParams<{ id: any}>();
+    const { id } = useParams<{ id: string }>();
+    const publicationId = Number(id);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
@@ -21,24 +22,28 @@ export default function Comentarios(): JSX.Element {
     }, []);
 
     const recarregarComentarios = useCallback(async () : Promise<void> => {
-        if (!id) return;
-        const atualizados = await ComentarioService.publicacao(id);
+        if (!Number.isSafeInteger(publicationId) || publicationId <= 0) return;
+        const atualizados = await ComentarioService.publicacao(publicationId);
         setComentarios(atualizados);
-    }, [id]);
+    }, [publicationId]);
 
     useEffect(() => {
-        if (!id) {
+        let ativo = true;
+        if (!id || !Number.isSafeInteger(publicationId) || publicationId <= 0) {
+            setComentarios([]);
             setCarregando(false);
             setErro("Não foi possível identificar a publicação.");
-            return;
+            return () => {
+                ativo = false;
+            };
         }
 
-        let ativo = true;
         setCarregando(true);
         setErro("");
+        setComentarios([]);
 
-        ComentarioService.publicacao(id)
-            .then((res: any) => {
+        ComentarioService.publicacao(publicationId)
+            .then((res: Comentario[]) => {
                 if (ativo) setComentarios(res);
             })
             .catch(() => {
@@ -51,7 +56,7 @@ export default function Comentarios(): JSX.Element {
         return () => {
             ativo = false;
         };
-    }, [id]);
+    }, [id, publicationId]);
 
     return (
         <>
@@ -70,9 +75,9 @@ export default function Comentarios(): JSX.Element {
             />
             <div className="container mb-4">
                 <h1 style={{textAlign: "center"}} >Comentários</h1>
-                {id ? (
+                {Number.isSafeInteger(publicationId) && publicationId > 0 ? (
                     <FormComentario 
-                        publicacao={id}
+                        publicacao={publicationId}
                         onComentarioCriado={recarregarComentarios}    
                     />
                 ) : (

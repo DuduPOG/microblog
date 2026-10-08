@@ -63,7 +63,6 @@ function Publicacoes() : JSX.Element {
             <div className="row">
             {publicacoes.map((publicacao: PublicacaoDetalhe) => {
                 return (
-                    <>
                     <div className="col-sm-6 col-md-4 col-lg-3" key={publicacao.id}>
                         <div className="br-card hover" style={{width: "auto", height: "auto"}}>
                             <div className="card-header">
@@ -81,7 +80,7 @@ function Publicacoes() : JSX.Element {
                                             <Botao 
                                                 label=""
                                                 action={() => {
-                                                    detalhar(publicacao.id)
+                                                    detalhar(publicacao.id);
                                                 }}
                                                 className="br-button primary circle mt-3 mr-3"
                                                 icon="fa fa-ellipsis-v"
@@ -104,14 +103,14 @@ function Publicacoes() : JSX.Element {
                                 <Botao
                                     label="Comentar"
                                     action={() => {
-                                        navigate(`/comentarios/${publicacao.id}`)}}
+                                        navigate(`/comentarios/${publicacao.id}`)
+                                    }}
                                     className="br-button warning m-3"
                                 />
                             </div>    
                             </div>
                             </div>
                         </div>
-                    </>
                 );
             })}
             </div>
