@@ -1,17 +1,35 @@
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
 import Botao from "../BrBotao";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { PublicacaoDetalhe } from "../../models/Publicacao";
 
-export default function Publicacoes() : JSX.Element {
+/**
+ * Busca e apresenta uma coleção de publicações em cartões com autor, imagem, título e descrição.
+ * Inclui atalhos para criar uma publicação, visualizar seus detalhes e abrir seus comentários.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; carrega as publicações pelo serviço da aplicação.
+ *
+ * @returns {JSX.Element} Elemento JSX com o feed e as ações de navegação das publicações.
+ *
+ * @example
+ * ```tsx
+ * <Publicacoes />
+ * ```
+ *
+ */
+
+function Publicacoes() : JSX.Element {
     
     const [publicacoes, setPublicacoes] = useState<PublicacaoDetalhe[]>([]);
 
     const navigate : NavigateFunction = useNavigate();
     
-    function handleData() : void {
+    const handleData = useCallback(() : void => {
         PublicacaoService.getAll()
         .then((res: PublicacaoDetalhe[]) : void => {
             console.log(res);
@@ -20,15 +38,15 @@ export default function Publicacoes() : JSX.Element {
         .catch((error: any) : any => {
             console.error("Não foi possível puxar a publicação", error)
         });
-    }
+    }, []);
 
-    function detalhar(publicacaoId: number) : void {
+    const detalhar = useCallback((publicacaoId: number) : void => {
         navigate(`/publicacoes/${publicacaoId}/`);
-    }
+    }, [navigate]);
 
     useEffect(() => {
         handleData();
-    }, []);
+    }, [handleData]);
 
 
     return (
@@ -63,7 +81,8 @@ export default function Publicacoes() : JSX.Element {
                                             <Botao 
                                                 label=""
                                                 action={() => {
-                                                    detalhar(publicacao.id)}}
+                                                    detalhar(publicacao.id)
+                                                }}
                                                 className="br-button primary circle mt-3 mr-3"
                                                 icon="fa fa-ellipsis-v"
                                             />
@@ -99,3 +118,5 @@ export default function Publicacoes() : JSX.Element {
         </>
     )
 }
+
+export default memo(Publicacoes);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormComentario from "../../components/BrFormComentario";
 import Header from "../../components/BrHeader";
@@ -14,17 +14,17 @@ export default function Comentarios(): JSX.Element {
     const [erro, setErro] = useState("");
     const navigate = useNavigate();
 
-    function atualizarComentario(comentarioId: number, mensagem: string) : void {
+    const atualizarComentario = useCallback((comentarioId: number, mensagem: string) : void => {
         setComentarios((atuais: Comentario[]) : Comentario[] => atuais.map((comentario: Comentario) : Comentario =>
             comentario.id === comentarioId ? { ...comentario, mensagem } : comentario
         ));
-    }
+    }, []);
 
-    async function recarregarComentarios() : Promise<void> {
+    const recarregarComentarios = useCallback(async () : Promise<void> => {
         if (!id) return;
         const atualizados = await ComentarioService.publicacao(id);
         setComentarios(atualizados);
-    }
+    }, [id]);
 
     useEffect(() => {
         if (!id) {

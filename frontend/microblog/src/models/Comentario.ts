@@ -1,4 +1,3 @@
-
 // -----------------------------
 // Interface de Modelo de Comentario
 // -----------------------------
@@ -12,7 +11,10 @@ export interface Comentario {
     mensagem: string;
 }
 
-export interface ComentarioProps {
+// -----------------------------
+// Interface das props do componente BrComentarios
+// -----------------------------
+export interface BrComentarioProps {
     comentarios: Comentario[];
     onComentarioAtualizado: (comentarioId: number, mensagem: string) => void;
 }

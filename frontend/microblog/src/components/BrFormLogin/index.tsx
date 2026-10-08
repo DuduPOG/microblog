@@ -2,18 +2,37 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./login.css"
 import { LoginSubmit } from "../../models/Login";
 
+/**
+ * Renderiza o formulário de autenticação e solicita o login pelo contexto de autenticação.
+ * Username e senha são obrigatórios; após o login, o usuário é encaminhado ao feed.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; username e senha são informados pelo usuário no formulário.
+ *
+ * @returns {JSX.Element} Elemento JSX do formulário de login e seus estados de validação.
+ *
+ * @example
+ * ```tsx
+ * <BrFormLogin />
+ * ```
+ *
+ */
 
 const schema : yup.ObjectSchema<LoginSubmit>= yup.object().shape({
         username: yup.string()
                 .required("Você precisa colocar um username válido para entrar no sistema!"),
         password: yup.string().required("Você precisa da senha para entrar no sistema!")
 });
+
+const resolver = yupResolver(schema);
 
 export default function BrFormLogin() : JSX.Element {
 
@@ -26,10 +45,10 @@ export default function BrFormLogin() : JSX.Element {
         register,
         formState: {errors}
     } = useForm({
-        resolver: yupResolver(schema)
+        resolver
     });
 
-    async function dataHandler(data: LoginSubmit) : Promise<void> {
+    const dataHandler = useCallback(async (data: LoginSubmit) : Promise<void> => {
         setLoginError(null);
         try {
             await login(data);
@@ -37,9 +56,9 @@ export default function BrFormLogin() : JSX.Element {
         } catch {
             setLoginError("Não foi possível entrar. Verifique seu usuário e senha.");
         }
-    };
+    }, [login, navigate]);
 
-        const campo: any = (
+    const campo = useCallback((
         id: "username" | "password",
         label: string,
         type: string,
@@ -74,7 +93,7 @@ export default function BrFormLogin() : JSX.Element {
                 </span>
                 )}
         </div>
-    );
+    ), [errors, register]);
 
     return (
         <>

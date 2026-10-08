@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -9,6 +9,25 @@ import ComentarioService from "../../services/ComentarioService";
 import { Comentario } from "../../models/Comentario";
 import  BrComentarios from "../BrComentarios";
 import { PublicacaoDetalhe } from "../../models/Publicacao";
+
+/**
+ * Exibe os detalhes de uma publicação e os comentários relacionados.
+ * Para o autor da publicação, disponibiliza edição do título, descrição e imagem,
+ * além da exclusão; também permite navegar para o formulário de comentários.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; obtém o identificador da publicação pela rota atual.
+ *
+ * @returns {JSX.Element} Elemento JSX com os detalhes, ações disponíveis e comentários.
+ *
+ * @example
+ * ```tsx
+ * <Publicacao />
+ * ```
+ *
+ */
 
 export default function Publicacao() : JSX.Element {
     const navigate : NavigateFunction = useNavigate();
@@ -45,18 +64,16 @@ export default function Publicacao() : JSX.Element {
         });
     }, [id]);
 
-    function ehAutor() : boolean{
-        const autor = publicacao?.autor?.id !== undefined && Number(publicacao.autor.id) === Number(user?.id);
-        return autor;
-    }
+    const ehAutor = publicacao?.autor?.id !== undefined
+        && Number(publicacao.autor.id) === Number(user?.id);
 
-    function atualizarComentario(comentarioId: number, mensagem: string) : void {
+    const atualizarComentario = useCallback((comentarioId: number, mensagem: string) : void => {
         setComentarios((atuais) => atuais.map((comentario) =>
             comentario.id === comentarioId ? { ...comentario, mensagem } : comentario
         ));
-    }
+    }, []);
 
-    async function salvarEdicao(event: React.FormEvent<HTMLFormElement>) : Promise<void> {
+    const salvarEdicao = useCallback(async (event: React.FormEvent<HTMLFormElement>) : Promise<void> => {
         event.preventDefault();
         if (!id) return;
 
@@ -78,9 +95,9 @@ export default function Publicacao() : JSX.Element {
         } catch {
             setErro("Não foi possível salvar as alterações.");
         }
-    }
+    }, [id, imagem, rascunho]);
 
-    async function excluir() : Promise<void> {
+    const excluir = useCallback(async () : Promise<void> => {
         if (!id || !window.confirm("Deseja realmente excluir esta publicação?")) return;
 
         try {
@@ -89,7 +106,19 @@ export default function Publicacao() : JSX.Element {
         } catch {
             setErro("Não foi possível excluir esta publicação.");
         }
-    }
+    }, [id, navigate]);
+
+    const voltarPublicacoes = useCallback(() : void => {
+        navigate("/publicacoes");
+    }, [navigate]);
+
+    const abrirComentarios = useCallback(() : void => {
+        if (publicacao) navigate(`/comentarios/${publicacao.id}`);
+    }, [navigate, publicacao]);
+
+    const iniciarEdicao = useCallback(() : void => {
+        setEditando(true);
+    }, []);
 
     return (
         <>
@@ -98,9 +127,7 @@ export default function Publicacao() : JSX.Element {
                 <div style={{textAlign: "initial"}}>
                     <Botao 
                         label="Voltar às publicações"
-                        action={() => {
-                            navigate("/publicacoes")
-                        }}
+                        action={voltarPublicacoes}
                         className="br-button secondary m-3"
                     />
                 </div>
@@ -172,12 +199,11 @@ export default function Publicacao() : JSX.Element {
                                                 Publicado por {publicacao.autor?.username || publicacao.autor?.nome || "Usuário Comum"}
                                                 {publicacao.publicado_em && ` em ${new Date(publicacao.publicado_em).toLocaleString("pt-BR")}`}
                                             </p>
-                                            {ehAutor() && (
+                                            {ehAutor && (
                                                 <div style={{textAlign: "center"}}>
                                                     <Botao 
                                                         label="Editar"
-                                                        action={() => {
-                                                        setEditando(true)}}
+                                                        action={iniciarEdicao}
                                                         className="br-button primary m-1"
                                                     />
                                                     <Botao 
@@ -199,8 +225,7 @@ export default function Publicacao() : JSX.Element {
                 <div style={{textAlign: "center"}}>
                     <Botao
                         label="Comentar"
-                        action={() => {
-                            navigate(`/comentarios/${publicacao.id}`)}}
+                        action={abrirComentarios}
                         className="br-button warning m-3"
                     />
                 </div>

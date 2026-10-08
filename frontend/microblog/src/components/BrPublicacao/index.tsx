@@ -1,17 +1,35 @@
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
 import Botao from "../BrBotao";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { PublicacaoDetalhe } from "../../models/Publicacao";
 
-export default function Publicacoes() : JSX.Element {
+/**
+ * Busca e exibe o feed de publicações em cartões com autor, imagem, título e descrição.
+ * Oferece ações para abrir os detalhes, acessar os comentários ou iniciar uma publicação.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; carrega as publicações pelo serviço da aplicação.
+ *
+ * @returns {JSX.Element} Elemento JSX com o feed e as ações de navegação das publicações.
+ *
+ * @example
+ * ```tsx
+ * <Publicacoes />
+ * ```
+ *
+ */
+
+function Publicacoes() : JSX.Element {
     
     const [publicacoes, setPublicacoes] = useState<PublicacaoDetalhe[]>([]);
 
     const navigate : NavigateFunction = useNavigate();
     
-    function handleData() : void {
+    const handleData = useCallback(() : void => {
         PublicacaoService.getAll()
         .then((res: PublicacaoDetalhe[]) : void => {
             console.log(res);
@@ -20,15 +38,15 @@ export default function Publicacoes() : JSX.Element {
         .catch((error: any) : void => {
             console.error("Não foi possível puxar a publicação", error)
         });
-    }
+    }, []);
 
-    function detalhar(publicacaoId: number) : void {
+    const detalhar = useCallback((publicacaoId: number) : void => {
         navigate(`/publicacoes/${publicacaoId}/`);
-    }
+    }, [navigate]);
 
     useEffect(() => {
         handleData();
-    }, []);
+    }, [handleData]);
 
 
     return (
@@ -94,7 +112,10 @@ export default function Publicacoes() : JSX.Element {
                     }
                     )
                 }
+
             </div>
         </>
     )
 }
+
+export default memo(Publicacoes);

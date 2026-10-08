@@ -2,6 +2,24 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import logoPnp from "../../assets/logo-pnp.png";
 
+/**
+ * Exibe a identidade visual da aplicação e, quando há uma sessão autenticada,
+ * apresenta a identificação do usuário e a ação para encerrar a sessão.
+ * 
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; consulta `user`, `signed` e `logout` pelo contexto de autenticação.
+ *
+ * @returns {JSX.Element} Elemento JSX do cabeçalho da aplicação.
+ *
+ * @example
+ * ```tsx
+ * <Header />
+ * ```
+ *
+ */
+
 export default function Header() : JSX.Element {
   const { user, signed, logout } = useAuth();
   const navigate : NavigateFunction = useNavigate();

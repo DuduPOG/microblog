@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import CadastroService from "../../services/CadastroService";
@@ -7,6 +7,26 @@ import { Link, useNavigate } from "react-router-dom";
 import logoPnp from "../../assets/logo-pnp.png";
 import "./cadastro.css";
 import { CadastroSubmit } from "../../models/Cadastro";
+
+/**
+ * Renderiza o formulário de cadastro de usuário, valida os campos e envia os dados
+ * ao serviço de cadastro. Em caso de sucesso, redireciona para a página de login.
+ *
+ * Os campos username, nome e senha são obrigatórios; a confirmação deve corresponder à senha.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; os dados de cadastro são informados pelo usuário no formulário.
+ *
+ * @returns {JSX.Element} Elemento JSX com o formulário de cadastro e seus estados de validação.
+ *
+ * @example
+ * ```tsx
+ * <FormCadastro />
+ * ```
+ *
+ */
 
 const schema: yup.ObjectSchema<CadastroSubmit> = yup.object().shape({
         username: yup.string()
@@ -19,6 +39,8 @@ const schema: yup.ObjectSchema<CadastroSubmit> = yup.object().shape({
             .required("Confirme sua senha.")
 });
 
+const resolver = yupResolver(schema);
+
 export default function FormCadastro() : JSX.Element {
 
     const navigate = useNavigate();
@@ -29,10 +51,10 @@ export default function FormCadastro() : JSX.Element {
         register,
         formState: {errors, isSubmitting}
     } = useForm({
-        resolver: yupResolver(schema)
+        resolver
     });
 
-    async function dataHandler({ confirmPassword, ...data }: any) : Promise<void> {
+    const dataHandler = useCallback(async ({ confirmPassword, ...data }: any) : Promise<void> => {
         setCadastroError(null);
         try {
             await CadastroService.cadastrar(data);
@@ -40,11 +62,11 @@ export default function FormCadastro() : JSX.Element {
         } catch (error: unknown) {
             setCadastroError("Não foi possível realizar o cadastro. Tente novamente.");
         }
-    }
-    function errorHandler(errors: any) : void {
+    }, [navigate]);
+    const errorHandler = useCallback((errors: any) : void => {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
-    };
+    }, []);
 
     const campo = (
         id: "username" | "nome" | "password" | "confirmPassword",

@@ -1,12 +1,29 @@
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import UsuarioService from "../../services/UsuarioService";
-import { useEffect } from "react";
-import { useAuth } from "../../auth/AuthProvider";
 import PublicacaoService from "../../services/PublicacaoService";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { PublicacaoSubmit } from "../../models/Publicacao";
+
+/**
+ * Renderiza o formulário de criação de publicação.
+ * Exige título (até 200 caracteres) e descrição (até 1200 caracteres), permite
+ * anexar opcionalmente um arquivo de imagem e redireciona ao feed após criar a publicação.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {void} props Este componente não recebe propriedades; título, descrição e imagem são informados pelo usuário no formulário.
+ *
+ * @returns {JSX.Element} Elemento JSX do formulário de publicação e seus estados de validação.
+ *
+ * @example
+ * ```tsx
+ * <FormPublicacao />
+ * ```
+ *
+ */
 
 const schema : yup.ObjectSchema<PublicacaoSubmit>= yup.object().shape({
         titulo: yup
@@ -28,24 +45,11 @@ const schema : yup.ObjectSchema<PublicacaoSubmit>= yup.object().shape({
                    .max(1200, "A descrição não pode ter mais de 1200 caracteres")
 });
 
+const resolver = yupResolver(schema);
 
 export default function FormPublicacao() : JSX.Element {
 
-    const { user } = useAuth();
-    const id : number | undefined = user?.id;
     const navigate : NavigateFunction = useNavigate();
-    
-    useEffect(() => {
-        if (id === undefined) return;
-
-        UsuarioService.getId(id)
-            .then((usuario) => {
-                console.log(usuario)
-            })
-            .catch((error) => {
-                console.error("Não foi possível buscar o usuário logado.", error)
-            });
-    }, [id]);
 
     const {
         handleSubmit,
@@ -53,19 +57,19 @@ export default function FormPublicacao() : JSX.Element {
         reset,
         formState: {errors}
     } = useForm({
-        resolver: yupResolver(schema)
+        resolver
     });
 
-    async function dataHandler(data: PublicacaoSubmit) : Promise<void> {
+    const dataHandler = useCallback(async (data: PublicacaoSubmit) : Promise<void> => {
         const bd = await PublicacaoService.create(data);
         console.log(bd);
         navigate("/publicacoes");
-    }
+    }, [navigate]);
 
-    function errorHandler(errors: any) : void {
+    const errorHandler = useCallback((errors: any) : void => {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
-    };
+    }, []);
 
     return (
         <>

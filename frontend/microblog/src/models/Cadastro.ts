@@ -1,15 +1,5 @@
-import { Comentario } from "./Comentario";
-
 // -----------------------------
-// Interface das props do componente BrComentarios
-// -----------------------------
-export interface BrComentariosProps {
-    comentarios: Comentario[];
-    onComentarioAtualizado: (comentarioId: number, mensagem: string) => void;
-}
-
-// -----------------------------
-// Interface de Modelo de Comentario
+// Interface de Submissão de Cadastro
 // -----------------------------
 export interface CadastroSubmit{
     username: string;

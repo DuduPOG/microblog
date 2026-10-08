@@ -1,12 +1,34 @@
+import { memo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import UsuarioService from "../../services/UsuarioService";
-import { useEffect } from "react";
-import { useAuth } from "../../auth/AuthProvider";
 import ComentarioService from "../../services/ComentarioService";
 import Botao from "../BrBotao";
 import { ComentarioSubmitProps, ComentarioSubmit } from "../../models/Comentario";
+
+/**
+ * Renderiza um formulário para criar comentário em uma publicação.
+ * Valida a mensagem para exigir conteúdo com até 400 caracteres e limpa o campo
+ * após a criação e a execução do callback informado.
+ *
+ * @author
+ *  @DuduPOG
+ *
+ * @param {ComentarioSubmitProps} props Propriedades do formulário de comentário.
+ * @param {number | string} props.publicacao Identificador da publicação que receberá o comentário.
+ * @param {() => void | Promise<void>} props.onComentarioCriado Callback executado após a criação.
+ *
+ * @returns {JSX.Element} Elemento JSX do formulário de comentário.
+ *
+ * @example
+ * ```tsx
+ * <FormComentario
+ *   publicacao={publicacaoId}
+ *   onComentarioCriado={recarregarComentarios}
+ * />
+ * ```
+ *
+ */
 
 const schema : yup.ObjectSchema<ComentarioSubmit> = yup.object().shape({
         mensagem: yup
@@ -15,24 +37,11 @@ const schema : yup.ObjectSchema<ComentarioSubmit> = yup.object().shape({
                 .max(400, "A mensagem não pode ter mais de 400 caracteres")
 });
 
+const resolver = yupResolver(schema);
 
-export default function FormComentario(props: ComentarioSubmitProps) : JSX.Element {
+function FormComentario(props: ComentarioSubmitProps) : JSX.Element {
 
     const { publicacao } = props;
-    const { user } = useAuth();
-    const id : number | undefined = user?.id;
-    
-    useEffect(() => {
-        if (id === undefined) return;
-
-        UsuarioService.getId(id)
-            .then((usuario) => {
-                console.log(usuario)
-            })
-            .catch((error) => {
-                console.error("Não foi possível buscar o usuário logado.", error)
-            });
-    }, [id]);
 
     const {
         handleSubmit,
@@ -40,21 +49,22 @@ export default function FormComentario(props: ComentarioSubmitProps) : JSX.Eleme
         reset,
         formState: {errors}
     } = useForm({
-        resolver: yupResolver(schema)
+        resolver
     });
 
-    async function dataHandler(data: ComentarioSubmit) : Promise<void> {
+    const dataHandler = useCallback(async (data: ComentarioSubmit) : Promise<void> => {
         const bd = await ComentarioService.create(Number(publicacao), data);
         await props.onComentarioCriado();
         console.log(bd);
         reset();
-    }
-    function errorHandler(errors: any) : void {
+    }, [publicacao, props.onComentarioCriado, reset]);
+    const errorHandler = useCallback((errors: any) : void => {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
-    };
-
-
+    }, []);
+    const limparFormulario = useCallback(() : void => {
+        reset();
+    }, [reset]);
 
     return (
         <>
@@ -106,7 +116,7 @@ export default function FormComentario(props: ComentarioSubmitProps) : JSX.Eleme
                         <div style={{textAlign: "end"}}>
                             <Botao
                                 label="Limpar"
-                                action={() => {reset()}}
+                                action={limparFormulario}
                                 className="br-button secondary m-1"
                             />
                             <input
@@ -122,3 +132,5 @@ export default function FormComentario(props: ComentarioSubmitProps) : JSX.Eleme
         </>
     )
 }
+
+export default memo(FormComentario);

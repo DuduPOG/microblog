@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import Botao from "../../components/BrBotao";
 import Header from "../../components/BrHeader";
@@ -6,6 +7,9 @@ import FormPublicacao from "../../components/BrFormPublicacao";
 export default function NovaPublicação() : JSX.Element {
 
     const navigate : NavigateFunction = useNavigate();
+    const voltarPublicacoes = useCallback(() : void => {
+        navigate("/publicacoes");
+    }, [navigate]);
 
     return (
         <>
@@ -13,10 +17,7 @@ export default function NovaPublicação() : JSX.Element {
         <div style={{textAlign: "initial"}}>
             <Botao
                 label="Voltar às publicações"
-                action={() => {
-                        navigate("/publicacoes")
-                    }
-                }
+                action={voltarPublicacoes}
                 className="br-button secondary m-3"
             />
         </div>

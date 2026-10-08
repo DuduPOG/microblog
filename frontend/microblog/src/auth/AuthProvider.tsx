@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode, Context } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState, useEffect, type ReactNode, Context } from 'react';
 import LoginService from '../services/LoginService';
 import { AuthContextValue } from '../models/Auth';
 import { AuthUser } from '../models/Auth';
@@ -49,24 +49,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) : JSX.Elemen
     return () => window.removeEventListener("auth:logout", handleSessionExpired);
   }, []);
 
-  async function login(credentials: LoginCredentials) : Promise<void> {
+  const login = useCallback(async (credentials: LoginCredentials) : Promise<void> => {
     const tokens = await LoginService.logar(credentials);
     const recoveredUser = decodeAccessToken(tokens.access);
     localStorage.setItem("access", tokens.access);
     localStorage.setItem("refresh", tokens.refresh);
     setUser(recoveredUser);
-  };
+  }, []);
 
-  function logout() : void {
+  const logout = useCallback(() : void => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    signed: !!user,
+    user,
+    loading,
+    login,
+    logout
+  }), [user, loading, login, logout]);
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, login, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
@@ -79,4 +87,3 @@ export function useAuth(): AuthContextValue {
   }
   return context;
 }
-
