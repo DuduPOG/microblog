@@ -5,7 +5,7 @@ import logoPnp from "../../assets/logo-pnp.png";
 export default function Header() : JSX.Element {
   const { user, signed, logout } = useAuth();
   const navigate : NavigateFunction = useNavigate();
-  const nome = user?.username || user?.nome || "Usuário";
+  const nome : string = user?.username || user?.nome || "Usuário";
 
     return (
     <>

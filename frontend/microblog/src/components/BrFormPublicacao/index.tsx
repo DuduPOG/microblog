@@ -5,7 +5,7 @@ import UsuarioService from "../../services/UsuarioService";
 import { useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import PublicacaoService from "../../services/PublicacaoService";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { PublicacaoSubmit } from "../../models/Publicacao";
 
 const schema : yup.ObjectSchema<PublicacaoSubmit>= yup.object().shape({
@@ -32,15 +32,19 @@ const schema : yup.ObjectSchema<PublicacaoSubmit>= yup.object().shape({
 export default function FormPublicacao() : JSX.Element {
 
     const { user } = useAuth();
-    const id = user?.id;
-    const navigate = useNavigate();
+    const id : number | undefined = user?.id;
+    const navigate : NavigateFunction = useNavigate();
     
     useEffect(() => {
         if (id === undefined) return;
 
         UsuarioService.getId(id)
-            .then((usuario) => console.log(usuario))
-            .catch((error) => console.error("Não foi possível buscar o usuário logado.", error));
+            .then((usuario) => {
+                console.log(usuario)
+            })
+            .catch((error) => {
+                console.error("Não foi possível buscar o usuário logado.", error)
+            });
     }, [id]);
 
     const {
@@ -52,12 +56,13 @@ export default function FormPublicacao() : JSX.Element {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = async (data: any) => {
+    async function dataHandler(data: PublicacaoSubmit) : Promise<void> {
         const bd = await PublicacaoService.create(data);
         console.log(bd);
         navigate("/publicacoes");
     }
-    const errorHandler = (errors: any) => {
+
+    function errorHandler(errors: any) : void {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
     };

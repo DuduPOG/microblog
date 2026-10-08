@@ -8,19 +8,19 @@ import BrComentarios from "../../components/BrComentarios";
 import { Comentario } from "../../models/Comentario";
 
 export default function Comentarios(): JSX.Element {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<{ id: any}>();
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
     const navigate = useNavigate();
 
-    function atualizarComentario(comentarioId: number, mensagem: string) {
-        setComentarios((atuais) => atuais.map((comentario) =>
+    function atualizarComentario(comentarioId: number, mensagem: string) : void {
+        setComentarios((atuais: Comentario[]) : Comentario[] => atuais.map((comentario: Comentario) : Comentario =>
             comentario.id === comentarioId ? { ...comentario, mensagem } : comentario
         ));
     }
 
-    async function recarregarComentarios() {
+    async function recarregarComentarios() : Promise<void> {
         if (!id) return;
         const atualizados = await ComentarioService.publicacao(id);
         setComentarios(atualizados);

@@ -1,12 +1,12 @@
 import { LoginCredentials } from "./Login";
 
 export interface AuthUser {
-  id?: number;
-  user_id?: number | string;
-  username?: string;
-  nome?: string;
-  email?: string;
-  admin?: boolean;
+  id?: number | undefined;
+  user_id?: number | undefined;
+  username?: string | undefined;
+  nome?: string | undefined;
+  email?: string | undefined;
+  admin?: boolean | undefined;
 }
 
 export interface AuthContextValue {

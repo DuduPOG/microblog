@@ -29,7 +29,7 @@ export default function BrFormLogin() : JSX.Element {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler : any = async (data: LoginSubmit) => {
+    async function dataHandler(data: LoginSubmit) : Promise<void> {
         setLoginError(null);
         try {
             await login(data);
@@ -44,7 +44,7 @@ export default function BrFormLogin() : JSX.Element {
         label: string,
         type: string,
         placeholder: string,
-    ) => (
+    ) : JSX.Element => (
         <div className={`br-input large mb-3 ${errors[id] !== undefined ? "danger" : ""}`}>
             <label 
                 htmlFor={id}

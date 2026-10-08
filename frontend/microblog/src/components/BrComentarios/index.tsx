@@ -37,15 +37,18 @@ export default function BrComentarios({
 
     return (
         <>
-            {comentarios.map((comentario) => {
-                const nomeAutor = comentario.autor?.username
+            {comentarios.map((comentario: Comentario) : JSX.Element => {
+                const nomeAutor : string = comentario.autor?.username
                     || comentario.autor?.nome
                     || "Usuário Comum";
-                const ehAutor = user?.id !== undefined
+                function ehAutor() : boolean {
+                    return user?.id !== undefined
                     && comentario.autor?.id !== undefined
-                    && String(user.id) === String(comentario.autor.id);
-                const estaEditando = comentarioEditando === comentario.id;
-
+                    && Number(user.id) === Number(comentario.autor.id);
+                }
+                function estaEditando() : boolean { 
+                    return comentarioEditando === comentario.id;
+                }
                 return (
                     <article className="br-card" key={comentario.id}>
                         <div className="card-header d-flex align-items-start justify-content-between">
@@ -61,7 +64,7 @@ export default function BrComentarios({
                                     </div>
                                 </div>
                             </div>
-                            {ehAutor && !estaEditando && (
+                            {ehAutor() && !estaEditando() && (
                                 <button
                                     type="button"
                                     className="br-button secondary circle"
@@ -74,7 +77,7 @@ export default function BrComentarios({
                             )}
                         </div>
                         <div className="card-content">
-                            {estaEditando ? (
+                            {estaEditando() ? (
                                 <>
                                     <textarea
                                         className="br-textarea"

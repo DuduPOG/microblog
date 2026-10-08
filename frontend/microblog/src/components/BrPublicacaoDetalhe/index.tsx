@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PublicacaoService from "../../services/PublicacaoService";
 import imgPadrao from "../../assets/image.png";
-import { NavigateFunction, useNavigate, useParams } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthProvider";
 import Botao from "../BrBotao";
 import Header from "../BrHeader";
@@ -13,7 +13,7 @@ import { PublicacaoDetalhe } from "../../models/Publicacao";
 export default function Publicacao() : JSX.Element {
     const navigate : NavigateFunction = useNavigate();
     const { user } = useAuth();
-    const id = user?.id;
+    const id : number | undefined = user?.id;
     const [publicacao, setPublicacao] = useState<PublicacaoDetalhe | null>(null);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [rascunho, setRascunho] = useState({ titulo: "", descricao: "" });
@@ -31,8 +31,13 @@ export default function Publicacao() : JSX.Element {
             setPublicacao(res);
             setRascunho({ titulo: res.titulo, descricao: res.descricao });
         })
-        .catch(() => setErro("Não foi possível carregar esta publicação."))
-        .finally(() => setCarregando(false));
+        .catch(() => {
+            setErro("Não foi possível carregar esta publicação.")
+        })
+        .finally(() => {
+            setCarregando(false)
+        });
+
         ComentarioService.publicacao(id)
         .then((res: any) => {
             setComentarios(res);
@@ -40,8 +45,10 @@ export default function Publicacao() : JSX.Element {
         });
     }, [id]);
 
-    const ehAutor : boolean = publicacao?.autor?.id !== undefined &&
-        Number(publicacao.autor.id) === Number(user?.id);
+    function ehAutor() : boolean{
+        const autor = publicacao?.autor?.id !== undefined && Number(publicacao.autor.id) === Number(user?.id);
+        return autor;
+    }
 
     function atualizarComentario(comentarioId: number, mensagem: string) : void {
         setComentarios((atuais) => atuais.map((comentario) =>
@@ -59,7 +66,7 @@ export default function Publicacao() : JSX.Element {
         if (imagem) dados.append("imagem", imagem);
 
         try {
-            const atualizada : void = await PublicacaoService.update(Number(id), dados);
+            const atualizada : PublicacaoDetalhe = await PublicacaoService.update(Number(id), dados);
             setPublicacao(atualizada);
             setRascunho({
                 titulo: atualizada.titulo,
@@ -165,7 +172,7 @@ export default function Publicacao() : JSX.Element {
                                                 Publicado por {publicacao.autor?.username || publicacao.autor?.nome || "Usuário Comum"}
                                                 {publicacao.publicado_em && ` em ${new Date(publicacao.publicado_em).toLocaleString("pt-BR")}`}
                                             </p>
-                                            {ehAutor && (
+                                            {ehAutor() && (
                                                 <div style={{textAlign: "center"}}>
                                                     <Botao 
                                                         label="Editar"

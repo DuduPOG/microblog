@@ -43,13 +43,13 @@ export default function FormComentario(props: ComentarioSubmitProps) : JSX.Eleme
         resolver: yupResolver(schema)
     });
 
-    const dataHandler : any = async (data: ComentarioSubmit) => {
-        const bd = await ComentarioService.create(String(publicacao), data);
+    async function dataHandler(data: ComentarioSubmit) : Promise<void> {
+        const bd = await ComentarioService.create(Number(publicacao), data);
         await props.onComentarioCriado();
         console.log(bd);
         reset();
     }
-    const errorHandler : any = (errors: any) => {
+    function errorHandler(errors: any) : void {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
     };

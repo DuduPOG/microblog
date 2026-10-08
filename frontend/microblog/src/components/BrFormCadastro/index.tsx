@@ -32,7 +32,7 @@ export default function FormCadastro() : JSX.Element {
         resolver: yupResolver(schema)
     });
 
-    const dataHandler = async ({ confirmPassword, ...data }: any) => {
+    async function dataHandler({ confirmPassword, ...data }: any) : Promise<void> {
         setCadastroError(null);
         try {
             await CadastroService.cadastrar(data);
@@ -41,7 +41,7 @@ export default function FormCadastro() : JSX.Element {
             setCadastroError("Não foi possível realizar o cadastro. Tente novamente.");
         }
     }
-    const errorHandler = (errors: any) => {
+    function errorHandler(errors: any) : void {
         console.log(errors);
         console.log("Os campos obrigatórios devem ser preenchidos e corretamente!");
     };
@@ -51,7 +51,7 @@ export default function FormCadastro() : JSX.Element {
         label: string,
         type: string,
         placeholder: string,
-    ) => (
+    ) : JSX.Element => (
         <div className={`br-input large mb-3 ${errors[id] !== undefined ? "danger" : ""}`}>
             <label 
                 htmlFor={id}

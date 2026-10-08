@@ -3,7 +3,7 @@
 // -----------------------------
 export interface PublicacaoSubmit{
     titulo: string;
-    imagem: FileList | null | undefined;
+    imagem?: FileList | null | undefined;
     descricao: string;
 }
 

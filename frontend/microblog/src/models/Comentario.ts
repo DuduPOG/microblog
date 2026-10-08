@@ -21,7 +21,7 @@ export interface ComentarioProps {
 // Interface das props do componente FormComentario
 // -----------------------------
 export interface ComentarioSubmitProps {
-    publicacao: string;
+    publicacao: any;
     onComentarioCriado: () => void | Promise<void>
 }
 

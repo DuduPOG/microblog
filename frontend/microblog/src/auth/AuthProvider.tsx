@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, type ReactNode, Context } from 'react';
 import LoginService from '../services/LoginService';
 import { AuthContextValue } from '../models/Auth';
-import { AuthUser } from '../models/AuthUser';
-import { LoginCredentials } from '../models/LoginCredentials';
+import { AuthUser } from '../models/Auth';
+import { LoginCredentials } from '../models/Login';
 
 export const AuthContext : Context<AuthContextValue | undefined> = createContext<AuthContextValue | undefined>(undefined);
 
@@ -15,7 +15,10 @@ function decodeAccessToken(access: string): AuthUser {
   const base64 : string = payload.replace(/-/g, "+").replace(/_/g, "/");
   const decoded : string = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "="));
   const user : AuthUser = JSON.parse(decoded) as AuthUser;
-  return { ...user, id: user.id ?? user.user_id };
+  return { 
+    ...user,
+    id: user?.id ?? user.user_id
+  };
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) : JSX.Element => {
@@ -46,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) : JSX.Elemen
     return () => window.removeEventListener("auth:logout", handleSessionExpired);
   }, []);
 
-  const login : any = async (credentials: LoginCredentials) => {
+  async function login(credentials: LoginCredentials) : Promise<void> {
     const tokens = await LoginService.logar(credentials);
     const recoveredUser = decodeAccessToken(tokens.access);
     localStorage.setItem("access", tokens.access);
@@ -54,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) : JSX.Elemen
     setUser(recoveredUser);
   };
 
-  const logout : () => void = () => {
+  function logout() : void {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     localStorage.removeItem("token");
